@@ -1,0 +1,81 @@
+{
+  "files": {
+    "enabled": false
+  },
+  "metadata": {
+    "title": "Universal Prompt Security Standard (UPSS)",
+    "upload_type": "software",
+    "publication_date": "{{PUBLICATION_DATE}}",
+    "version": "{{VERSION}}",
+    "language": "eng",
+    "description": "The Universal Prompt Security Standard (UPSS) is a comprehensive security framework designed to address the critical challenges in managing Large Language Model (LLM) prompts and generative AI systems. This standard provides organizations with a structured approach to externalizing, securing, and managing AI prompts through cryptographic verification, access control mechanisms, comprehensive audit logging, and version control practices. UPSS enables enterprises to maintain security compliance, prevent prompt injection attacks, ensure reproducibility of AI interactions, and establish governance over their AI systems. The framework is designed to be technology-agnostic, supporting multiple programming languages and deployment environments while providing industry-wide best practices for secure prompt management. Benefits include enhanced security posture, regulatory compliance support, improved team collaboration, and reduced risk of AI system compromise. Use cases range from enterprise AI deployments to research projects requiring secure prompt handling. {{RELEASE_BODY}}",
+    "notes": "This is a draft proposal open for community contribution and feedback. The Universal Prompt Security Standard (UPSS) is actively being developed to establish comprehensive security practices for LLM prompt management. Contributors are welcome to participate in the development process through GitHub issues, discussions, and pull requests.",
+    "creators": [
+      {
+        "name": "Veroy, Alvin T.",
+        "affiliation": "Independent Researcher"
+      }
+    ],
+    "contributors": [
+      {
+        "name": "Veroy, Alvin T.",
+        "affiliation": "Independent Researcher",
+        "type": "DataCurator"
+      }
+    ],
+    "keywords": [
+      "AI security",
+      "prompt injection",
+      "large language models",
+      "security standards",
+      "prompt management",
+      "LLM security",
+      "generative AI",
+      "prompt engineering",
+      "cybersecurity",
+      "software security"
+    ],
+    "subjects": [
+      {
+        "term": "Computer security",
+        "identifier": "http://id.loc.gov/authorities/subjects/sh85029532",
+        "scheme": "url"
+      },
+      {
+        "term": "Artificial intelligence--Security measures",
+        "identifier": "http://id.loc.gov/authorities/subjects/sh2023001851",
+        "scheme": "url"
+      },
+      {
+        "term": "Application software--Security measures",
+        "identifier": "http://id.loc.gov/authorities/subjects/sh2010014553",
+        "scheme": "url"
+      }
+    ],
+    "method": "UPSS employs a security-first approach combining cryptographic verification, access control, audit logging, and version control to establish industry-wide best practices for LLM prompt management.",
+    "license": "MIT",
+    "access_right": "open",
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/alvinveroy/prompt-security-standard",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      },
+      {
+        "identifier": "https://github.com/alvinveroy/prompt-security-standard/issues",
+        "relation": "hasMetadata",
+        "scheme": "url"
+      },
+      {
+        "identifier": "https://github.com/alvinveroy/prompt-security-standard/discussions",
+        "relation": "hasMetadata",
+        "scheme": "url"
+      }
+    ],
+    "references": [
+      "OWASP Top 10 for Large Language Model Applications",
+      "NIST AI Risk Management Framework",
+      "ISO/IEC 27001:2022 Information Security Management"
+    ]
+  }
+}
