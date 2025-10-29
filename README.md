@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="images/banner.png" alt="Banner" />
+</p>
+
 # Universal Prompt Security Standard (UPSS)
 
 **Version:** 1.0.0  
