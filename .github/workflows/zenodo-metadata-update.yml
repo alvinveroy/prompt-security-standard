@@ -1,0 +1,161 @@
+name: Update Zenodo Metadata
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  update-zenodo:
+    name: Update Zenodo Metadata
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Extract release information
+        id: release_info
+        run: |
+          echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "release_date=$(date -u +%Y-%m-%d)" >> $GITHUB_OUTPUT
+          
+      - name: Update CITATION.cff with new version
+        run: |
+          VERSION="${{ steps.release_info.outputs.version }}"
+          DATE="${{ steps.release_info.outputs.release_date }}"
+          
+          # Update version in CITATION.cff
+          sed -i "s/^version: .*/version: ${VERSION}/" CITATION.cff
+          sed -i "s/^date-released: .*/date-released: ${DATE}/" CITATION.cff
+          
+      - name: Prepare Zenodo metadata
+        id: zenodo_metadata
+        run: |
+          VERSION="${{ steps.release_info.outputs.version }}"
+          RELEASE_NAME="${{ github.event.release.name }}"
+          RELEASE_BODY="${{ github.event.release.body }}"
+          
+          # Create Zenodo-compatible metadata JSON
+          cat > zenodo_metadata.json <<EOF
+          {
+            "metadata": {
+              "title": "Universal Prompt Security Standard (UPSS)",
+              "upload_type": "software",
+              "publication_date": "${{ steps.release_info.outputs.release_date }}",
+              "version": "${VERSION}",
+              "description": "A comprehensive framework for externalizing, securing, and managing LLM prompts and generative AI systems across any organization or project. ${RELEASE_BODY}",
+              "creators": [
+                {
+                  "name": "Veroy, Alvin T.",
+                  "affiliation": "Independent Researcher",
+                  "orcid": "0009-0001-0637-1954"
+                }
+              ],
+              "keywords": [
+                "AI security",
+                "prompt injection",
+                "large language models",
+                "security standards",
+                "prompt management",
+                "LLM security",
+                "generative AI",
+                "prompt engineering",
+                "cybersecurity",
+                "software security"
+              ],
+              "license": "MIT",
+              "access_right": "open",
+              "related_identifiers": [
+                {
+                  "identifier": "https://github.com/alvinveroy/prompt-security-standard",
+                  "relation": "isSupplementTo",
+                  "scheme": "url"
+                }
+              ],
+              "references": [
+                "OWASP Top 10 for Large Language Model Applications",
+                "NIST AI Risk Management Framework",
+                "ISO/IEC 27001:2022 Information Security Management"
+              ]
+            }
+          }
+          EOF
+          
+          cat zenodo_metadata.json
+          
+      - name: Update Zenodo deposition
+        env:
+          ZENODO_ACCESS_TOKEN: ${{ secrets.ZENODO_ACCESS_TOKEN }}
+          ZENODO_DEPOSITION_ID: ${{ secrets.ZENODO_DEPOSITION_ID }}
+        run: |
+          if [ -z "$ZENODO_ACCESS_TOKEN" ]; then
+            echo "Warning: ZENODO_ACCESS_TOKEN not set. Skipping Zenodo update."
+            echo "Please add ZENODO_ACCESS_TOKEN to repository secrets to enable automatic Zenodo updates."
+            exit 0
+          fi
+          
+          if [ -z "$ZENODO_DEPOSITION_ID" ]; then
+            echo "Warning: ZENODO_DEPOSITION_ID not set. Skipping Zenodo update."
+            echo "Please add ZENODO_DEPOSITION_ID to repository secrets to enable automatic Zenodo updates."
+            exit 0
+          fi
+          
+          # Create a new version of the Zenodo deposition
+          echo "Creating new version on Zenodo..."
+          NEW_VERSION_RESPONSE=$(curl -sS -X POST \
+            "https://zenodo.org/api/deposit/depositions/${ZENODO_DEPOSITION_ID}/actions/newversion" \
+            -H "Authorization: Bearer ${ZENODO_ACCESS_TOKEN}")
+          
+          echo "New version response: ${NEW_VERSION_RESPONSE}"
+          
+          # Extract the new draft deposition ID
+          NEW_DRAFT_URL=$(echo "$NEW_VERSION_RESPONSE" | jq -r '.links.latest_draft')
+          NEW_DRAFT_ID=$(echo "$NEW_DRAFT_URL" | grep -oP '/depositions/\K[0-9]+')
+          
+          if [ -z "$NEW_DRAFT_ID" ]; then
+            echo "Error: Failed to create new version. Response:"
+            echo "$NEW_VERSION_RESPONSE"
+            exit 1
+          fi
+          
+          echo "New draft deposition ID: ${NEW_DRAFT_ID}"
+          
+          # Update the metadata for the new draft
+          echo "Updating metadata for new version..."
+          UPDATE_RESPONSE=$(curl -sS -X PUT \
+            "https://zenodo.org/api/deposit/depositions/${NEW_DRAFT_ID}" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${ZENODO_ACCESS_TOKEN}" \
+            -d @zenodo_metadata.json)
+          
+          echo "Update response: ${UPDATE_RESPONSE}"
+          
+          # Publish the new version
+          echo "Publishing new version..."
+          PUBLISH_RESPONSE=$(curl -sS -X POST \
+            "https://zenodo.org/api/deposit/depositions/${NEW_DRAFT_ID}/actions/publish" \
+            -H "Authorization: Bearer ${ZENODO_ACCESS_TOKEN}")
+          
+          echo "Publish response: ${PUBLISH_RESPONSE}"
+          
+          # Extract and display the new DOI
+          NEW_DOI=$(echo "$PUBLISH_RESPONSE" | jq -r '.doi')
+          echo "✅ Successfully published new version to Zenodo!"
+          echo "New DOI: ${NEW_DOI}"
+          echo "Zenodo URL: https://doi.org/${NEW_DOI}"
+          
+      - name: Summary
+        run: |
+          echo "## Zenodo Metadata Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ steps.release_info.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release Date**: ${{ steps.release_info.outputs.release_date }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ✅ Workflow completed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "If Zenodo secrets are configured, check the Zenodo record for the updated metadata." >> $GITHUB_STEP_SUMMARY
