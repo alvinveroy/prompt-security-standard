@@ -5,7 +5,7 @@ on:
     types: [published]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   update-zenodo:
@@ -32,6 +32,82 @@ jobs:
           # Update version in CITATION.cff
           sed -i "s/^version: .*/version: ${VERSION}/" CITATION.cff
           sed -i "s/^date-released: .*/date-released: ${DATE}/" CITATION.cff
+          
+      - name: Update README.md version and last updated date
+        run: |
+          VERSION="${{ steps.release_info.outputs.version }}"
+          DATE="${{ steps.release_info.outputs.release_date }}"
+          
+          # Remove 'v' prefix if present
+          CLEAN_VERSION="${VERSION#v}"
+          
+          # Format date as "Month Day, Year"
+          FORMATTED_DATE=$(date -d "$DATE" "+%B %d, %Y")
+          
+          # Update version in README.md
+          sed -i "s/^\*\*Version:\*\* .*/**Version:** ${CLEAN_VERSION}/" README.md
+          
+          # Update last updated date in README.md
+          sed -i "s/^\*\*Last Updated:\*\* .*/**Last Updated:** ${FORMATTED_DATE}/" README.md
+          
+      - name: Update CHANGELOG.md with release notes
+        run: |
+          VERSION="${{ steps.release_info.outputs.version }}"
+          RELEASE_DATE="${{ steps.release_info.outputs.release_date }}"
+          RELEASE_BODY="${{ github.event.release.body }}"
+          
+          # Remove 'v' prefix if present
+          CLEAN_VERSION="${VERSION#v}"
+          
+          # Create new changelog entry
+          cat > changelog_entry.tmp << EOF
+          ## [${CLEAN_VERSION}] - ${RELEASE_DATE}
+          
+          ### Release Notes
+          ${RELEASE_BODY}
+          
+          EOF
+          
+          # Insert the new entry after the Unreleased section
+          awk -v entry="$(cat changelog_entry.tmp)" '
+            /^## \[Unreleased\]/ {
+              print
+              getline
+              print
+              print entry
+              next
+            }
+            {print}
+          ' CHANGELOG.md > CHANGELOG.md.tmp
+          
+          # Add comparison link at the end if not already present
+          if ! grep -q "\[${CLEAN_VERSION}\]:" CHANGELOG.md.tmp; then
+            echo "" >> CHANGELOG.md.tmp
+            echo "[${CLEAN_VERSION}]: https://github.com/alvinveroy/prompt-security-standard/releases/tag/${VERSION}" >> CHANGELOG.md.tmp
+          fi
+          
+          # Replace original file
+          mv CHANGELOG.md.tmp CHANGELOG.md
+          rm -f changelog_entry.tmp
+          
+      - name: Commit and push version updates
+        run: |
+          VERSION="${{ steps.release_info.outputs.version }}"
+          
+          # Configure git user
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Stage modified files
+          git add README.md
+          git add CITATION.cff
+          git add CHANGELOG.md
+          
+          # Commit changes
+          git commit -m "chore(release): update version to ${VERSION} [skip ci]"
+          
+          # Push to main branch
+          git push origin HEAD:main
           
       - name: Prepare Zenodo metadata
         id: zenodo_metadata
