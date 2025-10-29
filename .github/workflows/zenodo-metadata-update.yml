@@ -52,8 +52,7 @@ jobs:
               "creators": [
                 {
                   "name": "Veroy, Alvin T.",
-                  "affiliation": "Independent Researcher",
-                  "orcid": "0009-0001-0637-1954"
+                  "affiliation": "Independent Researcher"
                 }
               ],
               "keywords": [
@@ -135,6 +134,16 @@ jobs:
           
           echo "Update response: ${UPDATE_RESPONSE}"
           
+          # Check for errors in update response
+          UPDATE_STATUS=$(echo "$UPDATE_RESPONSE" | jq -r '.status // empty')
+          if [ "$UPDATE_STATUS" = "400" ] || [ "$UPDATE_STATUS" = "500" ]; then
+            echo "❌ Error: Failed to update metadata"
+            echo "Status: $UPDATE_STATUS"
+            echo "Message: $(echo "$UPDATE_RESPONSE" | jq -r '.message // empty')"
+            echo "Errors: $(echo "$UPDATE_RESPONSE" | jq -r '.errors // empty')"
+            exit 1
+          fi
+          
           # Publish the new version
           echo "Publishing new version..."
           PUBLISH_RESPONSE=$(curl -sS -X POST \
@@ -143,8 +152,23 @@ jobs:
           
           echo "Publish response: ${PUBLISH_RESPONSE}"
           
+          # Check for errors in publish response
+          PUBLISH_STATUS=$(echo "$PUBLISH_RESPONSE" | jq -r '.status // empty')
+          if [ "$PUBLISH_STATUS" = "400" ] || [ "$PUBLISH_STATUS" = "500" ]; then
+            echo "❌ Error: Failed to publish new version"
+            echo "Status: $PUBLISH_STATUS"
+            echo "Response: $PUBLISH_RESPONSE"
+            exit 1
+          fi
+          
           # Extract and display the new DOI
-          NEW_DOI=$(echo "$PUBLISH_RESPONSE" | jq -r '.doi')
+          NEW_DOI=$(echo "$PUBLISH_RESPONSE" | jq -r '.doi // empty')
+          if [ -z "$NEW_DOI" ] || [ "$NEW_DOI" = "null" ]; then
+            echo "❌ Error: Failed to extract DOI from publish response"
+            echo "Response: $PUBLISH_RESPONSE"
+            exit 1
+          fi
+          
           echo "✅ Successfully published new version to Zenodo!"
           echo "New DOI: ${NEW_DOI}"
           echo "Zenodo URL: https://doi.org/${NEW_DOI}"

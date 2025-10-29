@@ -78,7 +78,8 @@ If the workflow fails:
 2. **Verify token scopes**: The token needs `deposit:write` and `deposit:actions` scopes
 3. **Check Zenodo status**: Verify your Zenodo record exists and is accessible
 4. **Review logs**: Check the workflow run logs for specific error messages
-5. **Test locally**: You can test the API calls locally:
+5. **ORCID validation errors**: Note that ORCID identifiers are intentionally omitted from the metadata to avoid validation issues with Zenodo's API. The ORCID is maintained in CITATION.cff for proper citation format.
+6. **Test locally**: You can test the API calls locally:
 
 ```bash
 # Test creating a new version
@@ -86,6 +87,12 @@ curl -X POST \
   "https://zenodo.org/api/deposit/depositions/YOUR_DEPOSITION_ID/actions/newversion" \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
+
+**Common Issues**:
+
+- **Invalid ORCID identifier**: If you see this error, it's because Zenodo's API has specific requirements for ORCID format. The workflow intentionally omits ORCID from the API payload to avoid this issue.
+- **DOI is null**: This indicates the publish step failed. Check the publish response for validation errors.
+- **400 Bad Request**: Usually indicates invalid metadata format. Review the error messages in the workflow logs.
 
 **Testing**:
 
