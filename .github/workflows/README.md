@@ -59,6 +59,19 @@ If the required secrets are not configured, the workflow will:
 
 This allows the workflow to work without breaking CI/CD while providing clear guidance for enabling full functionality.
 
+**Externalized Metadata Configuration**:
+
+Zenodo metadata is now externalized to `config/zenodo/metadata.json` for better maintainability. This approach follows the repository's separation of concerns principle (the same principle UPSS advocates), keeping configuration data separate from workflow logic.
+
+The metadata file uses placeholders (`{{VERSION}}`, `{{PUBLICATION_DATE}}`, `{{RELEASE_BODY}}`) that are dynamically replaced during workflow execution. This design provides several benefits:
+
+- **Easier to review**: Metadata changes are clearly visible in version control
+- **Simpler to update**: Edit `config/zenodo/metadata.json` directly without touching workflow code
+- **Better maintainability**: Configuration and logic are properly separated
+- **Improved traceability**: All metadata changes are tracked in the repository's history
+
+To update Zenodo metadata, simply edit `config/zenodo/metadata.json` directly. The workflow will automatically use the updated metadata on the next release.
+
 **Metadata-only records**:
 
 The workflow creates metadata-only records on Zenodo, meaning no files are uploaded to Zenodo. This approach is appropriate because:
