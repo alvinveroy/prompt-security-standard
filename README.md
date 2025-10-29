@@ -8,6 +8,8 @@
 **Status:** Draft Proposal  
 **Last Updated:** October 29, 2025
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17472647.svg)](https://doi.org/10.5281/zenodo.17472647)
+
 > A comprehensive framework for externalizing, securing, and managing LLM prompts and generative AI systems across any organization or project.
 
 ## Executive Summary
@@ -635,6 +637,7 @@ BibTeX:
   author={UPSS Contributors},
   year={2025},
   version={1.0.0},
+  doi={10.5281/zenodo.17472647},
   url={https://github.com/alvinveroy/prompt-security-standard},
   note={Draft Proposal}
 }
