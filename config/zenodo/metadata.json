@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "files": {
+      "enabled": false
+    },
+    "title": "Universal Prompt Security Standard (UPSS)",
+    "upload_type": "software",
+    "publication_date": "{{PUBLICATION_DATE}}",
+    "version": "{{VERSION}}",
+    "description": "The Universal Prompt Security Standard (UPSS) is a comprehensive security framework designed to address the critical challenges in managing Large Language Model (LLM) prompts and generative AI systems. This standard provides organizations with a structured approach to externalizing, securing, and managing AI prompts through cryptographic verification, access control mechanisms, comprehensive audit logging, and version control practices. UPSS enables enterprises to maintain security compliance, prevent prompt injection attacks, ensure reproducibility of AI interactions, and establish governance over their AI systems. The framework is designed to be technology-agnostic, supporting multiple programming languages and deployment environments while providing industry-wide best practices for secure prompt management. Benefits include enhanced security posture, regulatory compliance support, improved team collaboration, and reduced risk of AI system compromise. Use cases range from enterprise AI deployments to research projects requiring secure prompt handling. {{RELEASE_BODY}}",
+    "creators": [
+      {
+        "name": "Veroy, Alvin T.",
+        "affiliation": "Independent Researcher"
+      }
+    ],
+    "keywords": [
+      "AI security",
+      "prompt injection",
+      "large language models",
+      "security standards",
+      "prompt management",
+      "LLM security",
+      "generative AI",
+      "prompt engineering",
+      "cybersecurity",
+      "software security"
+    ],
+    "license": "MIT",
+    "access_right": "open",
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/alvinveroy/prompt-security-standard",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      }
+    ],
+    "references": [
+      "OWASP Top 10 for Large Language Model Applications",
+      "NIST AI Risk Management Framework",
+      "ISO/IEC 27001:2022 Information Security Management"
+    ]
+  }
+}

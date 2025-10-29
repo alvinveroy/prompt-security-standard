@@ -37,57 +37,29 @@ jobs:
         id: zenodo_metadata
         run: |
           VERSION="${{ steps.release_info.outputs.version }}"
+          RELEASE_DATE="${{ steps.release_info.outputs.release_date }}"
           RELEASE_NAME="${{ github.event.release.name }}"
           RELEASE_BODY="${{ github.event.release.body }}"
           
-          # Create Zenodo-compatible metadata JSON
-          cat > zenodo_metadata.json <<EOF
-          {
-            "metadata": {
-              "files": {
-                "enabled": false
-              },
-              "title": "Universal Prompt Security Standard (UPSS)",
-              "upload_type": "software",
-              "publication_date": "${{ steps.release_info.outputs.release_date }}",
-              "version": "${VERSION}",
-              "description": "A comprehensive framework for externalizing, securing, and managing LLM prompts and generative AI systems across any organization or project. ${RELEASE_BODY}",
-              "creators": [
-                {
-                  "name": "Veroy, Alvin T.",
-                  "affiliation": "Independent Researcher"
-                }
-              ],
-              "keywords": [
-                "AI security",
-                "prompt injection",
-                "large language models",
-                "security standards",
-                "prompt management",
-                "LLM security",
-                "generative AI",
-                "prompt engineering",
-                "cybersecurity",
-                "software security"
-              ],
-              "license": "MIT",
-              "access_right": "open",
-              "related_identifiers": [
-                {
-                  "identifier": "https://github.com/alvinveroy/prompt-security-standard",
-                  "relation": "isSupplementTo",
-                  "scheme": "url"
-                }
-              ],
-              "references": [
-                "OWASP Top 10 for Large Language Model Applications",
-                "NIST AI Risk Management Framework",
-                "ISO/IEC 27001:2022 Information Security Management"
-              ]
-            }
-          }
-          EOF
+          # Load metadata from config file and replace placeholders
+          if [ ! -f "config/zenodo/metadata.json" ]; then
+            echo "❌ Error: config/zenodo/metadata.json not found"
+            exit 1
+          fi
           
+          # Create a temporary file for processing
+          cp config/zenodo/metadata.json zenodo_metadata.json
+          
+          # Replace placeholders using sed
+          # Escape special characters in RELEASE_BODY for sed
+          ESCAPED_RELEASE_BODY=$(echo "$RELEASE_BODY" | sed 's/[[\.*^$()+?{|]/\\&/g')
+          
+          # Perform substitutions
+          sed -i "s/{{VERSION}}/${VERSION}/g" zenodo_metadata.json
+          sed -i "s/{{PUBLICATION_DATE}}/${RELEASE_DATE}/g" zenodo_metadata.json
+          sed -i "s/{{RELEASE_BODY}}/${ESCAPED_RELEASE_BODY}/g" zenodo_metadata.json
+          
+          echo "Generated metadata:"
           cat zenodo_metadata.json
           
       - name: Update Zenodo deposition
