@@ -1,0 +1,55 @@
+cff-version: 1.2.0
+message: "If you use this software or standard, please cite it as below."
+type: software
+title: "Universal Prompt Security Standard (UPSS)"
+version: 1.0.0
+abstract: "A comprehensive framework for externalizing, securing, and managing LLM prompts and generative AI systems across any organization or project."
+authors:
+  - family-names: Veroy
+    given-names: Alvin T.
+    email: alvin@alvin.tech
+    affiliation: Independent Researcher
+    orcid: https://orcid.org/0009-0001-0637-1954
+repository-code: "https://github.com/alvinveroy/prompt-security-standard"
+url: "https://github.com/alvinveroy/prompt-security-standard"
+keywords:
+  - AI security
+  - prompt injection
+  - large language models
+  - security standards
+  - prompt management
+  - LLM security
+  - generative AI
+  - prompt engineering
+  - cybersecurity
+  - software security
+license: MIT
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.17472647
+    description: "Zenodo DOI for UPSS"
+date-released: 2025-10-29
+preferred-citation:
+  type: generic
+  title: "Universal Prompt Security Standard (UPSS): A Framework for Secure AI Prompt Management"
+  authors:
+    - family-names: Veroy
+      given-names: Alvin T.
+      email: alvin@alvin.tech
+      affiliation: Independent Researcher
+      orcid: https://orcid.org/0009-0001-0637-1954
+  year: 2025
+  url: "https://github.com/alvinveroy/prompt-security-standard"
+  identifiers:
+    - type: doi
+      value: 10.5281/zenodo.17472647
+references:
+  - type: standard
+    title: "OWASP Top 10 for Large Language Model Applications"
+    url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+  - type: standard
+    title: "NIST AI Risk Management Framework"
+    url: "https://www.nist.gov/itl/ai-risk-management-framework"
+  - type: standard
+    title: "ISO/IEC 27001:2022 Information Security Management"
+    url: "https://www.iso.org/isoiec-27001-information-security.html"
