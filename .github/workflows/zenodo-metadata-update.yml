@@ -47,17 +47,19 @@ jobs:
             exit 1
           fi
           
-          # Create a temporary file for processing
-          cp config/zenodo/metadata.json zenodo_metadata.json
-          
-          # Replace placeholders using sed
-          # Escape special characters in RELEASE_BODY for sed
-          ESCAPED_RELEASE_BODY=$(echo "$RELEASE_BODY" | sed 's/[[\.*^$()+?{|]/\\&/g')
-          
-          # Perform substitutions
-          sed -i "s/{{VERSION}}/${VERSION}/g" zenodo_metadata.json
-          sed -i "s/{{PUBLICATION_DATE}}/${RELEASE_DATE}/g" zenodo_metadata.json
-          sed -i "s/{{RELEASE_BODY}}/${ESCAPED_RELEASE_BODY}/g" zenodo_metadata.json
+          # Use jq to replace placeholders with proper JSON escaping
+          jq --arg version "$VERSION" \
+             --arg publication_date "$RELEASE_DATE" \
+             --arg release_body "$RELEASE_BODY" \
+             '
+             walk(if type == "string" then
+                 gsub("{{VERSION}}"; $version) |
+                 gsub("{{PUBLICATION_DATE}}"; $publication_date) |
+                 gsub("{{RELEASE_BODY}}"; $release_body)
+               else
+                 .
+               end)
+             ' config/zenodo/metadata.json > zenodo_metadata.json
           
           echo "Generated metadata:"
           cat zenodo_metadata.json
