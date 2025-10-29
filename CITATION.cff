@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software or standard, please cite it as below."
 type: software
 title: "Universal Prompt Security Standard (UPSS)"
-version: 1.0.0
+version: v1.0.1
 abstract: "A comprehensive framework for externalizing, securing, and managing LLM prompts and generative AI systems across any organization or project."
 authors:
   - family-names: Veroy

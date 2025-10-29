@@ -4,7 +4,7 @@
 
 # Universal Prompt Security Standard (UPSS)
 
-**Version:** 1.0.0  
+**Version:** 1.0.1
 **Status:** Draft Proposal  
 **Last Updated:** October 29, 2025
 
