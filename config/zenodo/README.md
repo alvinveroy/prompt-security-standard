@@ -65,7 +65,17 @@ To test metadata changes before release:
 cat config/zenodo/metadata.json | jq .
 
 # Test placeholder replacement (example)
-sed 's/{{VERSION}}/v1.0.0/g; s/{{PUBLICATION_DATE}}/2025-10-29/g; s/{{RELEASE_BODY}}/Test release/g' config/zenodo/metadata.json
+jq --arg version "v1.0.0" --arg date "2025-10-29" --arg body "Test release" '
+  walk(
+    if type == "string" then
+      gsub("{{VERSION}}"; $version) |
+      gsub("{{PUBLICATION_DATE}}"; $date) |
+      gsub("{{RELEASE_BODY}}"; $body)
+    else
+      .
+    end
+  )
+' config/zenodo/metadata.json
 ```
 
 ## Workflow Integration
