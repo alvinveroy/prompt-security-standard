@@ -25,6 +25,18 @@
     ],
     "license": "MIT",
     "access_right": "open",
+    "notes": "Copyright © 2025 Alvin Veroy.",
+    "language": "eng",
+    "dates": [
+      {
+        "start": "2025-10-29",
+        "type": "Created",
+        "description": "First public release of Universal Prompt Security Standard (UPSS) v1.0.0 Draft."
+      }
+    ],
+    "repository_url": "https://github.com/alvinveroy/prompt-security-standard",
+    "programming_language": ["Python", "JavaScript"],
+    "development_status": "Active",
     "related_identifiers": [
       {
         "identifier": "https://github.com/alvinveroy/prompt-security-standard",
