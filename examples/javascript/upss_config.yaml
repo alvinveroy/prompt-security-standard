@@ -1,0 +1,40 @@
+upss_version: "1.0.0"
+metadata:
+  project_name: "JavaScript UPSS Example"
+  description: "Reference implementation of UPSS in JavaScript/Node.js"
+  maintainer: "UPSS Contributors"
+  last_updated: "2025-01-01"
+
+prompts:
+  system_assistant:
+    path: "prompts/system/assistant.md"
+    type: "system"
+    version: "1.0.0"
+    description: "Main system prompt for the AI assistant"
+    tags: ["system", "core"]
+    
+  user_greeting:
+    path: "prompts/user/greeting.md"
+    type: "user"
+    version: "1.0.0"
+    description: "User greeting template"
+    tags: ["user", "interaction"]
+
+security:
+  encryption: false
+  access_control:
+    enabled: true
+    roles:
+      - admin
+      - developer
+      - readonly
+  
+validation:
+  required_fields: ["path", "type", "version"]
+  allowed_types: ["system", "user", "assistant"]
+  max_prompt_size: 10240
+
+audit:
+  enabled: true
+  log_access: true
+  log_modifications: true
