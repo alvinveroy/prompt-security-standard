@@ -59,16 +59,36 @@ jobs:
           # Remove 'v' prefix if present
           CLEAN_VERSION="${VERSION#v}"
           
-          # Create temporary file with new changelog content
-          {
-            # Read everything up to and including [Unreleased] section
-            awk '/^## \[Unreleased\]/ {print; print ""; print "## [${CLEAN_VERSION}] - ${RELEASE_DATE}"; print ""; print "### Release Notes"; print ""; print "${RELEASE_BODY}"; print ""; next} 
-                 /^## \[/ && !/^## \[Unreleased\]/ {print; print "[${CLEAN_VERSION}]: https://github.com/alvinveroy/prompt-security-standard/releases/tag/${VERSION}"; next}
-                 {print}' CHANGELOG.md
-          } > CHANGELOG.md.tmp
+          # Create new changelog entry
+          cat > changelog_entry.tmp << EOF
+          ## [${CLEAN_VERSION}] - ${RELEASE_DATE}
+          
+          ### Release Notes
+          ${RELEASE_BODY}
+          
+          EOF
+          
+          # Insert the new entry after the Unreleased section
+          awk -v entry="$(cat changelog_entry.tmp)" '
+            /^## \[Unreleased\]/ {
+              print
+              getline
+              print
+              print entry
+              next
+            }
+            {print}
+          ' CHANGELOG.md > CHANGELOG.md.tmp
+          
+          # Add comparison link at the end if not already present
+          if ! grep -q "\[${CLEAN_VERSION}\]:" CHANGELOG.md.tmp; then
+            echo "" >> CHANGELOG.md.tmp
+            echo "[${CLEAN_VERSION}]: https://github.com/alvinveroy/prompt-security-standard/releases/tag/${VERSION}" >> CHANGELOG.md.tmp
+          fi
           
           # Replace original file
           mv CHANGELOG.md.tmp CHANGELOG.md
+          rm -f changelog_entry.tmp
           
       - name: Commit and push version updates
         run: |
