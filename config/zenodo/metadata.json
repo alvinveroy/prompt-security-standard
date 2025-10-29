@@ -1,8 +1,8 @@
 {
+  "files": {
+    "enabled": false
+  },
   "metadata": {
-    "files": {
-      "enabled": false
-    },
     "title": "Universal Prompt Security Standard (UPSS)",
     "upload_type": "software",
     "publication_date": "{{PUBLICATION_DATE}}",
