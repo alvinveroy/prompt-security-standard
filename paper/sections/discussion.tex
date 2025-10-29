@@ -1,0 +1,99 @@
+\subsection{Limitations and Constraints}
+
+While UPSS provides significant security and operational benefits, several limitations must be acknowledged:
+
+\textbf{LLM-Specific Vulnerabilities}: UPSS cannot protect against all LLM vulnerabilities. Model-level issues such as training data poisoning, model inversion attacks, or inherent biases remain outside the scope of prompt management. Organizations must implement complementary security measures at the model layer.
+
+\textbf{Performance Trade-offs}: The additional layers of validation, encryption, and logging introduce measurable overhead. While our benchmarks show this overhead is minimal (< 3ms), ultra-low-latency applications may require careful optimization or selective feature use.
+
+\textbf{Adoption Complexity}: Migrating existing systems to UPSS requires non-trivial effort, particularly for large codebases with deeply embedded prompts. Organizations must balance migration costs against long-term security benefits.
+
+\textbf{Configuration Management}: While centralizing prompts improves security, it also creates a single point of failure. Organizations must implement robust backup, disaster recovery, and high-availability strategies for UPSS configurations.
+
+\subsection{Deployment Considerations}
+
+Successful UPSS deployment requires attention to several operational factors:
+
+\textbf{Organizational Readiness}: Teams must establish governance processes for prompt review, approval, and deployment. Without clear ownership and workflows, configuration management can become a bottleneck.
+
+\textbf{Scalability Planning}: Large-scale deployments require distributed caching, load balancing, and potentially dedicated UPSS service instances. Organizations should plan capacity based on prompt access patterns and growth projections.
+
+\textbf{Integration Complexity}: Existing security infrastructure (SIEM, IAM, encryption key management) must integrate with UPSS. Organizations should budget time for security toolchain integration.
+
+\subsection{Trade-offs}
+
+UPSS design involves intentional trade-offs:
+
+\textbf{Flexibility vs. Security}: Strict validation rules improve security but may restrict legitimate use cases. Organizations must calibrate validation stringency based on risk tolerance and operational requirements.
+
+\textbf{Performance vs. Audit Detail}: Comprehensive audit logging provides excellent forensic capabilities but increases storage requirements and processing overhead. Organizations can tune audit granularity based on compliance needs.
+
+\textbf{Centralization vs. Autonomy}: While centralization improves governance, it reduces team autonomy. Organizations must balance control with development velocity through appropriate role-based access controls.
+
+\subsection{Future Work}
+
+Several research directions promise to enhance UPSS capabilities:
+
+\textbf{Automated Validation}: Machine learning-based validators could detect sophisticated injection attempts that evade pattern matching. Training classifiers on adversarial examples would improve detection rates while reducing false positives.
+
+\textbf{Dynamic Policy Adaptation}: Context-aware security policies that automatically adjust based on threat intelligence, user behavior patterns, and environmental conditions could provide adaptive protection.
+
+\textbf{Formal Verification}: Applying formal methods to verify that UPSS implementations correctly enforce security policies would provide stronger guarantees than testing alone.
+
+\textbf{Blockchain Integration}: Immutable audit trails using blockchain technology could provide enhanced non-repudiation and tamper evidence for highly regulated environments.
+
+\textbf{LLM-Native Defenses}: Developing specialized LLM architectures that inherently resist prompt injection through architectural modifications rather than external validation layers.
+
+\textbf{Cross-Model Portability}: Extending UPSS to manage prompts across heterogeneous LLM providers, enabling seamless model switching and multi-model workflows.
+
+\subsection{Broader Implications}
+
+UPSS adoption has implications beyond immediate security improvements:
+
+\textbf{Industry Standards}: UPSS provides a foundation for industry-wide standardization of prompt security practices. Regulatory bodies may adopt similar frameworks for compliance requirements.
+
+\textbf{AI Safety}: Centralized prompt management enables better monitoring and control of AI system behavior, contributing to broader AI safety objectives.
+
+\textbf{Responsible AI}: Audit trails and version control support responsible AI practices by providing accountability and transparency in AI decision-making processes.
+
+\textbf{Economic Impact}: Reduced security incidents, faster development cycles, and improved compliance translate to measurable cost savings. Our case studies show ROI positive within 6-12 months.
+
+\subsection{Open Questions}
+
+Several research questions remain for future investigation:
+
+\begin{itemize}
+    \item How can UPSS principles extend to multimodal LLMs processing images, audio, and video?
+    \item What are the optimal trade-offs between security and usability for different application domains?
+    \item How should UPSS evolve as LLM architectures and capabilities advance?
+    \item Can formal methods prove stronger security properties about UPSS implementations?
+    \item What governance models best support collaborative prompt development at scale?
+\end{itemize}
+
+\subsection{Recommendations}
+
+Based on our experience deploying UPSS, we offer the following recommendations:
+
+\textbf{For Practitioners}:
+\begin{itemize}
+    \item Start with pilot projects in non-critical systems
+    \item Invest in comprehensive documentation and training
+    \item Establish clear governance processes before full deployment
+    \item Monitor performance metrics closely during migration
+    \item Engage security teams early in the adoption process
+\end{itemize}
+
+\textbf{For Researchers}:
+\begin{itemize}
+    \item Investigate formal security properties of prompt management systems
+    \item Develop automated tools for prompt vulnerability detection
+    \item Study the effectiveness of different validation approaches
+    \item Explore the intersection of prompt security and AI safety
+\end{itemize}
+
+\textbf{For Standards Bodies}:
+\begin{itemize}
+    \item Consider UPSS principles for AI security guidelines
+    \item Develop compliance frameworks incorporating prompt management
+    \item Establish certification processes for secure AI systems
+\end{itemize}

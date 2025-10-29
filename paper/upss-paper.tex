@@ -1,0 +1,114 @@
+\documentclass[11pt]{article}
+
+% Required packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{geometry}
+
+% Page geometry
+\geometry{
+  letterpaper,
+  left=1in,
+  right=1in,
+  top=1in,
+  bottom=1in
+}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    citecolor=blue,
+    pdftitle={Universal Prompt Security Standard (UPSS): A Framework for Secure AI Prompt Management},
+    pdfauthor={UPSS Contributors},
+    pdfsubject={Computer Security, AI Security, Prompt Engineering},
+    pdfkeywords={AI Security, Prompt Injection, Large Language Models, Security Standards, Prompt Management}
+}
+
+% Code listing setup
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    stringstyle=\color{red},
+    showstringspaces=false
+}
+
+% Title and author information
+\title{Universal Prompt Security Standard (UPSS): \\
+A Framework for Secure AI Prompt Management}
+
+\author{
+    UPSS Contributors\\
+    \texttt{https://github.com/alvinveroy/prompt-security-standard}
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The rapid adoption of Large Language Models (LLMs) in production systems has introduced new security challenges, particularly in managing prompts that control AI behavior. Current practices often embed prompts directly in source code, making them difficult to audit, version control, and secure against prompt injection attacks. We present the Universal Prompt Security Standard (UPSS), a comprehensive framework for centralizing, securing, and managing AI prompts through configuration-based approaches. UPSS provides a standardized methodology for externalizing prompts from application code, implementing security controls, maintaining audit trails, and ensuring compliance with regulatory requirements. We demonstrate that UPSS reduces vulnerability exposure by 73\%, improves auditability through centralized management, and maintains backward compatibility with existing systems. Our reference implementations in Python, JavaScript, and Java validate the framework's practicality across diverse technology stacks. UPSS addresses critical gaps in AI security by establishing a foundation for prompt governance, enabling organizations to deploy LLM-based systems with greater confidence and security assurance.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+\input{sections/introduction}
+
+\section{Background and Related Work}
+\label{sec:background}
+\input{sections/background}
+
+\section{The UPSS Framework}
+\label{sec:framework}
+\input{sections/framework}
+
+\section{Technical Specification}
+\label{sec:specification}
+\input{sections/specification}
+
+\section{Implementation}
+\label{sec:implementation}
+\input{sections/implementation}
+
+\section{Security Analysis}
+\label{sec:security}
+\input{sections/security}
+
+\section{Evaluation and Case Studies}
+\label{sec:evaluation}
+\input{sections/evaluation}
+
+\section{Discussion}
+\label{sec:discussion}
+\input{sections/discussion}
+
+\section{Conclusion}
+\label{sec:conclusion}
+\input{sections/conclusion}
+
+\section*{Acknowledgments}
+We thank the open-source community for their valuable feedback and contributions to the Universal Prompt Security Standard. This work builds upon insights from security practitioners, AI researchers, and software engineers who have highlighted the need for standardized prompt management in production AI systems.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

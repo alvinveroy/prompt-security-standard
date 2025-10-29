@@ -1,0 +1,212 @@
+\subsection{Configuration Schema}
+
+The UPSS configuration schema is defined in YAML for human readability and machine parseability. A minimal valid configuration includes:
+
+\begin{lstlisting}[language=yaml,caption=Minimal UPSS Configuration]
+upss_version: "1.0.0"
+prompts:
+  system_prompt:
+    path: "prompts/system.md"
+    type: "system"
+    version: "1.0.0"
+\end{lstlisting}
+
+A comprehensive configuration with security and metadata:
+
+\begin{lstlisting}[language=yaml,caption=Comprehensive UPSS Configuration]
+upss_version: "1.0.0"
+metadata:
+  project_name: "AI Assistant"
+  description: "Enterprise AI system"
+  maintainer: "security@example.com"
+  last_updated: "2025-01-15"
+
+prompts:
+  customer_service:
+    path: "prompts/customer_service.md"
+    type: "system"
+    version: "2.1.0"
+    description: "Customer service AI assistant"
+    tags: ["production", "customer-facing"]
+    access_level: "restricted"
+    max_tokens: 2048
+    
+security:
+  encryption: true
+  encryption_algorithm: "AES-256-GCM"
+  access_control:
+    enabled: true
+    roles:
+      - admin
+      - developer
+      - auditor
+  integrity_checks: true
+  
+validation:
+  required_fields: ["path", "type", "version"]
+  allowed_types: ["system", "user", "assistant"]
+  max_prompt_size: 10240
+  custom_validators:
+    - no_hardcoded_secrets
+    - valid_markdown_syntax
+    
+audit:
+  enabled: true
+  log_access: true
+  log_modifications: true
+  log_failures: true
+  retention_days: 365
+  siem_integration: true
+\end{lstlisting}
+
+\subsection{Prompt File Organization}
+
+Prompts are stored in dedicated directories with clear organizational structure:
+
+\begin{verbatim}
+project/
+├── upss_config.yaml
+└── prompts/
+    ├── system/
+    │   ├── assistant.md
+    │   └── moderator.md
+    ├── user/
+    │   └── templates/
+    └── functions/
+        └── code_review.md
+\end{verbatim}
+
+\subsection{Security Controls}
+
+\textbf{Input Validation}: All user inputs are validated before inclusion in prompts:
+
+\begin{algorithm}
+\caption{Input Validation Algorithm}
+\begin{algorithmic}[1]
+\Procedure{ValidateInput}{$input$, $rules$}
+    \For{$rule$ \textbf{in} $rules$}
+        \If{$\neg$ $rule$.matches($input$)}
+            \State \textbf{return} ValidationError($rule$.message)
+        \EndIf
+    \EndFor
+    \If{ContainsInjectionPattern($input$)}
+        \State \textbf{return} SecurityError("Injection detected")
+    \EndIf
+    \State \textbf{return} Success($input$)
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Output Filtering}: LLM responses are filtered to prevent data leakage:
+
+\begin{itemize}
+    \item Remove PII (names, addresses, phone numbers, SSNs)
+    \item Redact API keys, passwords, and credentials
+    \item Filter internal system information
+    \item Apply organization-specific redaction rules
+\end{itemize}
+
+\textbf{Integrity Verification}: Each prompt has a SHA-256 checksum computed and stored:
+
+\begin{lstlisting}[language=Python,caption=Integrity Check Example]
+def verify_prompt_integrity(prompt_id, content):
+    expected_hash = get_stored_hash(prompt_id)
+    actual_hash = hashlib.sha256(
+        content.encode('utf-8')
+    ).hexdigest()
+    
+    if expected_hash != actual_hash:
+        raise IntegrityViolation(
+            f"Prompt {prompt_id} failed integrity check"
+        )
+    
+    audit_log.record("integrity_check_passed", 
+                     prompt_id)
+\end{lstlisting}
+
+\subsection{Audit Trail Format}
+
+Audit logs follow a standardized JSON format for SIEM integration:
+
+\begin{lstlisting}[language=json,caption=Audit Log Entry]
+{
+  "timestamp": "2025-01-15T10:30:45.123Z",
+  "event_type": "prompt_access",
+  "user_id": "user@example.com",
+  "prompt_id": "customer_service",
+  "action": "load",
+  "source_ip": "192.0.2.1",
+  "user_agent": "MyApp/1.0",
+  "result": "success",
+  "integrity_verified": true,
+  "access_level": "restricted"
+}
+\end{lstlisting}
+
+\subsection{Versioning and Metadata}
+
+Prompts use semantic versioning (MAJOR.MINOR.PATCH):
+
+\begin{itemize}
+    \item MAJOR: Breaking changes to prompt structure
+    \item MINOR: Backward-compatible functionality additions
+    \item PATCH: Backward-compatible bug fixes
+\end{itemize}
+
+Metadata fields support governance and discoverability:
+
+\begin{lstlisting}[language=yaml,caption=Prompt Metadata Example]
+prompt_id: "customer_service_v2"
+version: "2.1.3"
+created: "2024-06-15"
+last_modified: "2025-01-10"
+author: "ai-team@example.com"
+reviewers: ["security@example.com"]
+approval_date: "2025-01-12"
+effective_date: "2025-01-15"
+deprecation_date: "2026-01-15"
+\end{lstlisting}
+
+\subsection{Integration Patterns}
+
+\textbf{Synchronous Loading}: For low-latency requirements:
+
+\begin{lstlisting}[language=Python,caption=Synchronous Integration]
+from upss import UPSSLoader
+
+loader = UPSSLoader("upss_config.yaml")
+prompt = loader.get_prompt("customer_service")
+response = llm_client.generate(prompt, user_input)
+\end{lstlisting}
+
+\textbf{Asynchronous Loading}: For high-throughput systems:
+
+\begin{lstlisting}[language=JavaScript,caption=Async Integration]
+const loader = new UPSSLoader('upss_config.yaml');
+await loader.init();
+
+const prompt = await loader.getPrompt(
+    'customer_service'
+);
+const response = await llm.generate(prompt);
+\end{lstlisting}
+
+\textbf{Caching Strategy}: For optimized performance:
+
+\begin{lstlisting}[language=Python,caption=Caching Implementation]
+class CachedUPSSLoader(UPSSLoader):
+    def __init__(self, config_path, ttl=3600):
+        super().__init__(config_path)
+        self.cache = LRUCache(maxsize=100)
+        self.ttl = ttl
+    
+    def get_prompt(self, prompt_id):
+        cached = self.cache.get(prompt_id)
+        if cached and not cached.is_expired():
+            return cached.content
+        
+        prompt = super().get_prompt(prompt_id)
+        self.cache.set(prompt_id, 
+                       CachedPrompt(prompt, self.ttl))
+        return prompt
+\end{lstlisting}
