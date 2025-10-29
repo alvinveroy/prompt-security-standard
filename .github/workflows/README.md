@@ -66,7 +66,7 @@ The workflow creates metadata-only records on Zenodo, meaning no files are uploa
 1. **GitHub as primary source**: UPSS is a GitHub-hosted standard, and the repository serves as the authoritative source for all files and documentation
 2. **DOI assignment**: Zenodo is used primarily for assigning DOIs and providing citation metadata for academic and research purposes
 3. **Reference linking**: The metadata includes links back to the GitHub repository, ensuring users always access the most current version
-4. **File management**: Setting `files.enabled: false` in the metadata prevents file duplication and ensures Zenodo doesn't attempt to host repository files
+4. **File management**: The `files.enabled: false` field at the root level of the JSON payload (not inside `metadata`) tells Zenodo this is a metadata-only record with no file uploads
 
 This metadata-only approach maintains a single source of truth on GitHub while leveraging Zenodo's DOI and citation infrastructure for academic recognition and discoverability.
 

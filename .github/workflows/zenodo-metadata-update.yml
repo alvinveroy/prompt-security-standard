@@ -43,10 +43,10 @@ jobs:
           # Create Zenodo-compatible metadata JSON
           cat > zenodo_metadata.json <<EOF
           {
+            "files": {
+              "enabled": false
+            },
             "metadata": {
-              "files": {
-                "enabled": false
-              },
               "title": "Universal Prompt Security Standard (UPSS)",
               "upload_type": "software",
               "publication_date": "${{ steps.release_info.outputs.release_date }}",
