@@ -104,25 +104,70 @@ jobs:
             exit 0
           fi
           
-          # Create a new version of the Zenodo deposition
-          echo "Creating new version on Zenodo..."
-          NEW_VERSION_RESPONSE=$(curl -sS -X POST \
-            "https://zenodo.org/api/deposit/depositions/${ZENODO_DEPOSITION_ID}/actions/newversion" \
-            -H "Authorization: Bearer ${ZENODO_ACCESS_TOKEN}")
+          # Function to create a new version, handling existing drafts
+          create_new_version() {
+            echo "Creating new version on Zenodo..."
+            NEW_VERSION_RESPONSE=$(curl -sS -X POST \
+              "https://zenodo.org/api/deposit/depositions/${ZENODO_DEPOSITION_ID}/actions/newversion" \
+              -H "Authorization: Bearer ${ZENODO_ACCESS_TOKEN}")
+            
+            echo "New version response: ${NEW_VERSION_RESPONSE}"
+            
+            # Check if the response contains an error about existing files
+            ERROR_MESSAGE=$(echo "$NEW_VERSION_RESPONSE" | jq -r '.message // empty')
+            STATUS=$(echo "$NEW_VERSION_RESPONSE" | jq -r '.status // empty')
+            
+            if [ "$STATUS" = "400" ] && echo "$ERROR_MESSAGE" | grep -q "Please remove all files first"; then
+              echo "⚠️ Detected existing unpublished draft version"
+              
+              # Check if there's a latest_draft link in the error response
+              LATEST_DRAFT_URL=$(echo "$NEW_VERSION_RESPONSE" | jq -r '.links.latest_draft // empty')
+              
+              if [ -n "$LATEST_DRAFT_URL" ] && [ "$LATEST_DRAFT_URL" != "null" ]; then
+                EXISTING_DRAFT_ID=$(echo "$LATEST_DRAFT_URL" | grep -oP '/depositions/\K[0-9]+')
+                
+                if [ -n "$EXISTING_DRAFT_ID" ]; then
+                  echo "🗑️ Deleting existing unpublished draft: ${EXISTING_DRAFT_ID}"
+                  
+                  DELETE_DRAFT_RESPONSE=$(curl -sS -X DELETE \
+                    "https://zenodo.org/api/deposit/depositions/${EXISTING_DRAFT_ID}" \
+                    -H "Authorization: Bearer ${ZENODO_ACCESS_TOKEN}")
+                  
+                  DELETE_STATUS=$(echo "$DELETE_DRAFT_RESPONSE" | jq -r '.status // empty')
+                  if [ "$DELETE_STATUS" = "400" ] || [ "$DELETE_STATUS" = "500" ]; then
+                    echo "❌ Error: Failed to delete existing draft"
+                    echo "Response: $DELETE_DRAFT_RESPONSE"
+                    exit 1
+                  fi
+                  
+                  echo "✅ Successfully deleted existing draft"
+                  echo "🔄 Retrying new version creation..."
+                  
+                  # Retry creating new version
+                  NEW_VERSION_RESPONSE=$(curl -sS -X POST \
+                    "https://zenodo.org/api/deposit/depositions/${ZENODO_DEPOSITION_ID}/actions/newversion" \
+                    -H "Authorization: Bearer ${ZENODO_ACCESS_TOKEN}")
+                  
+                  echo "Retry response: ${NEW_VERSION_RESPONSE}"
+                fi
+              fi
+            fi
+            
+            # Extract the new draft deposition ID
+            NEW_DRAFT_URL=$(echo "$NEW_VERSION_RESPONSE" | jq -r '.links.latest_draft')
+            NEW_DRAFT_ID=$(echo "$NEW_DRAFT_URL" | grep -oP '/depositions/\K[0-9]+')
+            
+            if [ -z "$NEW_DRAFT_ID" ]; then
+              echo "❌ Error: Failed to create new version. Response:"
+              echo "$NEW_VERSION_RESPONSE"
+              exit 1
+            fi
+            
+            echo "✅ New draft deposition ID: ${NEW_DRAFT_ID}"
+          }
           
-          echo "New version response: ${NEW_VERSION_RESPONSE}"
-          
-          # Extract the new draft deposition ID
-          NEW_DRAFT_URL=$(echo "$NEW_VERSION_RESPONSE" | jq -r '.links.latest_draft')
-          NEW_DRAFT_ID=$(echo "$NEW_DRAFT_URL" | grep -oP '/depositions/\K[0-9]+')
-          
-          if [ -z "$NEW_DRAFT_ID" ]; then
-            echo "Error: Failed to create new version. Response:"
-            echo "$NEW_VERSION_RESPONSE"
-            exit 1
-          fi
-          
-          echo "New draft deposition ID: ${NEW_DRAFT_ID}"
+          # Call the function to create new version
+          create_new_version
           
           # List and delete existing files from the new draft
           echo "Checking for existing files in the new draft..."
