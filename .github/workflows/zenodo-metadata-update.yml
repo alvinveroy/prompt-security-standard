@@ -146,48 +146,8 @@ jobs:
           # Call the function to create new version
           create_new_version
           
-          # List and delete existing files from the new draft
-          echo "Checking for existing files in the new draft..."
-          FILES_RESPONSE=$(curl -sS -X GET \
-            "https://zenodo.org/api/deposit/depositions/${NEW_DRAFT_ID}/files" \
-            -H "Authorization: Bearer ${ZENODO_ACCESS_TOKEN}")
-          
-          echo "Files response: ${FILES_RESPONSE}"
-          
-          # Extract file IDs and count
-          FILE_IDS=$(echo "$FILES_RESPONSE" | jq -r '.[].id')
-          FILE_COUNT=$(echo "$FILE_IDS" | wc -l | tr -d ' ')
-          
-          echo "Found ${FILE_COUNT} files in the draft"
-          
-          if [ "$FILE_COUNT" -gt 0 ] && [ -n "$FILE_IDS" ]; then
-            echo "Deleting existing files..."
-            
-            # Loop through each file and delete it
-            for FILE_ID in $FILE_IDS; do
-              if [ -n "$FILE_ID" ] && [ "$FILE_ID" != "null" ]; then
-                echo "Deleting file ID: ${FILE_ID}"
-                
-                DELETE_RESPONSE=$(curl -sS -X DELETE \
-                  "https://zenodo.org/api/deposit/depositions/${NEW_DRAFT_ID}/files/${FILE_ID}" \
-                  -H "Authorization: Bearer ${ZENODO_ACCESS_TOKEN}")
-                
-                DELETE_STATUS=$(echo "$DELETE_RESPONSE" | jq -r '.status // empty')
-                if [ "$DELETE_STATUS" = "400" ] || [ "$DELETE_STATUS" = "500" ]; then
-                  echo "❌ Error: Failed to delete file ${FILE_ID}"
-                  echo "Status: $DELETE_STATUS"
-                  echo "Response: $DELETE_RESPONSE"
-                  exit 1
-                fi
-                
-                echo "✅ Successfully deleted file ${FILE_ID}"
-              fi
-            done
-            
-            echo "✅ All existing files have been deleted"
-          else
-            echo "No existing files found, proceeding with metadata update"
-          fi
+          # Keep existing files from the previous version instead of deleting them
+          # This ensures Zenodo has at least one file for publishing
           
           # Update the metadata for the new draft
           echo "Updating metadata for new version..."
