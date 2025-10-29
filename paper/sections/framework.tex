@@ -1,0 +1,99 @@
+\subsection{Design Principles}
+
+UPSS is built upon four fundamental design principles that guide all aspects of the framework:
+
+\textbf{Separation of Concerns}: Prompts are treated as configuration data, separate from application logic. This separation enables independent evolution of prompts and code, facilitates security review, and reduces the blast radius of prompt modifications.
+
+\textbf{Defense in Depth}: UPSS implements multiple layered security controls rather than relying on a single protection mechanism. This approach ensures that compromise of one layer does not defeat the entire security posture.
+
+\textbf{Principle of Least Privilege}: Access to prompts and prompt modification capabilities is granted based on legitimate need. Role-based access control ensures that users and systems can only access prompts required for their function.
+
+\textbf{Auditability by Design}: All prompt access, modifications, and usage are logged for security monitoring and compliance. The framework treats audit trails as first-class citizens rather than afterthoughts.
+
+\subsection{Architecture Overview}
+
+The UPSS architecture consists of four primary layers, each providing distinct functionality while maintaining clear interfaces:
+
+\begin{figure}[h]
+\centering
+\begin{verbatim}
++----------------------------------+
+|     Application Layer            |
+|  (Business Logic, UI, APIs)      |
++----------------------------------+
+           |
+           v
++----------------------------------+
+|     UPSS Access Layer            |
+|  (Loader, Validator, Cache)      |
++----------------------------------+
+           |
+           v
++----------------------------------+
+|     Security Layer               |
+|  (Auth, Encryption, Filtering)   |
++----------------------------------+
+           |
+           v
++----------------------------------+
+|     Storage Layer                |
+|  (Config Files, Prompts, Audit)  |
++----------------------------------+
+\end{verbatim}
+\caption{UPSS Architecture Layers}
+\label{fig:architecture}
+\end{figure}
+
+\textbf{Storage Layer}: Manages persistent storage of configuration files, prompt templates, and audit logs. Supports local filesystem, version control systems, and cloud storage backends.
+
+\textbf{Security Layer}: Implements authentication, authorization, encryption, input validation, and output filtering. This layer enforces security policies before prompts reach the application.
+
+\textbf{Access Layer}: Provides the primary API for loading, validating, and managing prompts. Includes caching, versioning, and metadata management capabilities.
+
+\textbf{Application Layer}: Where business logic resides. Applications interact with UPSS through well-defined APIs without direct access to underlying prompt storage.
+
+\subsection{Core Components}
+
+\textbf{Configuration Loader}: The loader component reads YAML configuration files, parses metadata, and loads prompt content. It validates configuration schema, resolves file paths, and maintains an in-memory representation of the prompt catalog.
+
+\textbf{Prompt Validator}: Validates both configuration structure and prompt content. Checks for required fields, validates data types, ensures file references are valid, and applies custom validation rules.
+
+\textbf{Security Manager}: Enforces access controls, manages encryption keys, implements input sanitization, and filters outputs. The security manager is pluggable, allowing organizations to integrate with existing security infrastructure.
+
+\textbf{Audit Logger}: Records all security-relevant events including prompt access, modifications, validation failures, and security violations. Logs are tamper-evident and support integration with SIEM systems.
+
+\textbf{Cache Manager}: Optimizes performance through intelligent caching of frequently accessed prompts. Implements cache invalidation strategies and supports distributed caching for scaled deployments.
+
+\subsection{Configuration-Based Approach}
+
+UPSS adopts a configuration-first approach with several key advantages:
+
+\textbf{Centralization}: All prompts are cataloged in a single configuration file or directory structure, providing a complete inventory for security review and audit.
+
+\textbf{Versioning}: Configuration files can be version-controlled using standard tools like Git, enabling change tracking, rollback capabilities, and collaborative review processes.
+
+\textbf{Flexibility}: Organizations can define custom metadata fields, validation rules, and security policies tailored to their requirements.
+
+\textbf{Portability}: The YAML-based configuration is human-readable and language-agnostic, supporting implementation across diverse technology stacks.
+
+\subsection{Threat Model}
+
+UPSS addresses threats from three primary adversary classes:
+
+\textbf{External Attackers}: Malicious users attempting to manipulate LLM behavior through prompt injection, extract sensitive information, or bypass access controls.
+
+\textbf{Internal Threats}: Authorized users or compromised accounts attempting to exfiltrate prompts, modify configurations, or abuse system capabilities.
+
+\textbf{Supply Chain Attacks}: Compromised dependencies or infrastructure attempting to inject malicious prompts or tamper with configurations.
+
+\subsection{Assumptions}
+
+UPSS operates under the following security assumptions:
+
+\begin{itemize}
+    \item The underlying operating system and filesystem provide basic security guarantees
+    \item Cryptographic primitives (encryption, hashing) function as specified
+    \item The LLM itself is not directly compromised
+    \item Network communications can be secured through TLS
+    \item Organizations can establish and enforce access control policies
+\end{itemize}
