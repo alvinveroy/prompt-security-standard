@@ -70,6 +70,18 @@ The workflow creates metadata-only records on Zenodo, meaning no files are uploa
 
 This metadata-only approach maintains a single source of truth on GitHub while leveraging Zenodo's DOI and citation infrastructure for academic recognition and discoverability.
 
+**Comprehensive Metadata**:
+
+The workflow now includes comprehensive metadata to enhance academic discoverability and citation standards:
+
+- **Enhanced description**: Detailed framework description including security features, benefits, and use cases
+- **Language specification**: Explicitly set to English (eng) for international indexing
+- **Community contribution notes**: Information about the open development process and contribution channels
+- **Controlled subjects**: Library of Congress subject headings for standardized academic classification
+- **Contributors field**: Data curation attribution for research credit
+- **Additional related identifiers**: Links to issues and discussions for community engagement tracking
+- **Methodology description**: Technical approach summary for research methodology documentation
+
 **Workflow outputs**:
 
 - Updated `CITATION.cff` file (if needed)
