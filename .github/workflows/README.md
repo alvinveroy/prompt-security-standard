@@ -59,6 +59,17 @@ If the required secrets are not configured, the workflow will:
 
 This allows the workflow to work without breaking CI/CD while providing clear guidance for enabling full functionality.
 
+**Metadata-only records**:
+
+The workflow creates metadata-only records on Zenodo, meaning no files are uploaded to Zenodo. This approach is appropriate because:
+
+1. **GitHub as primary source**: UPSS is a GitHub-hosted standard, and the repository serves as the authoritative source for all files and documentation
+2. **DOI assignment**: Zenodo is used primarily for assigning DOIs and providing citation metadata for academic and research purposes
+3. **Reference linking**: The metadata includes links back to the GitHub repository, ensuring users always access the most current version
+4. **File management**: Setting `files.enabled: false` in the metadata prevents file duplication and ensures Zenodo doesn't attempt to host repository files
+
+This metadata-only approach maintains a single source of truth on GitHub while leveraging Zenodo's DOI and citation infrastructure for academic recognition and discoverability.
+
 **Workflow outputs**:
 
 - Updated `CITATION.cff` file (if needed)
