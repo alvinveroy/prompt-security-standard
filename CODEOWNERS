@@ -1,0 +1,46 @@
+# CODEOWNERS file for Universal Prompt Security Standard (UPSS)
+# 
+# This file defines individuals or teams that are responsible for code in this repository.
+# Code owners are automatically requested for review when someone opens a pull request
+# that modifies code that they own.
+#
+# More information: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo
+# These owners will be the default owners for everything in the repo.
+# Unless a later match takes precedence, these owners will be requested
+# for review when someone opens a pull request.
+*       @alvinveroy
+
+# Documentation
+/docs/                          @alvinveroy
+/README.md                      @alvinveroy
+/CONTRIBUTING.md                @alvinveroy
+/CODE_OF_CONDUCT.md             @alvinveroy
+/SECURITY.md                    @alvinveroy
+/CHANGELOG.md                   @alvinveroy
+
+# Configuration and schemas
+/config/                        @alvinveroy
+*.json                          @alvinveroy
+*.yaml                          @alvinveroy
+*.yml                           @alvinveroy
+
+# Security-related files
+/SECURITY.md                    @alvinveroy
+/docs/security-checklist.md     @alvinveroy
+/.github/workflows/             @alvinveroy
+
+# Examples and implementations
+/examples/                      @alvinveroy
+
+# Paper and academic content
+/paper/                         @alvinveroy
+
+# Tests
+/tests/                         @alvinveroy
+
+# Citation and authorship
+/CITATION.cff                   @alvinveroy
+/AUTHORS.md                     @alvinveroy
+/PROOF.md                       @alvinveroy
