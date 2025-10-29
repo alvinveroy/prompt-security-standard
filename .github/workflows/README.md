@@ -14,8 +14,10 @@ This directory contains automated workflows for the UPSS project.
 1. Extracts release information (version, date, description)
 2. Updates the `CITATION.cff` file with the new version and release date
 3. Creates Zenodo-compatible metadata from the release information
-4. Creates a new version on Zenodo and publishes it with updated metadata
-5. Provides a summary with the new DOI
+4. Creates a new version on Zenodo
+5. Deletes inherited files from the new draft version to prevent validation errors
+6. Updates the metadata and publishes the new version
+7. Provides a summary with the new DOI
 
 **Required Secrets**:
 
@@ -93,6 +95,7 @@ curl -X POST \
 - **Invalid ORCID identifier**: If you see this error, it's because Zenodo's API has specific requirements for ORCID format. The workflow intentionally omits ORCID from the API payload to avoid this issue.
 - **DOI is null**: This indicates the publish step failed. Check the publish response for validation errors.
 - **400 Bad Request**: Usually indicates invalid metadata format. Review the error messages in the workflow logs.
+- **"Please remove all files first" error**: New Zenodo versions inherit files from previous versions. The workflow automatically deletes these inherited files before updating metadata to prevent this validation error. If you encounter this error, check that the file deletion step completed successfully in the workflow logs.
 
 **Testing**:
 
