@@ -6,7 +6,9 @@ This directory contains the LaTeX source for the UPSS research paper submitted t
 
 **Title**: Universal Prompt Security Standard (UPSS): A Framework for Secure AI Prompt Management
 
-**Authors**: UPSS Contributors
+**Authors**: 
+- Alvin T. Veroy (Initial Author and Lead Designer)
+- UPSS Contributors
 
 **Category**: Computer Science - Cryptography and Security (cs.CR)
 
