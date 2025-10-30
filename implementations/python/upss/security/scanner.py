@@ -1,8 +1,9 @@
 """Security utilities for UPSS."""
 
-import re
 import logging
-from typing import Tuple, List
+import re
+from typing import List, Tuple
+
 from ..core.exceptions import SecurityError
 
 logger = logging.getLogger(__name__)

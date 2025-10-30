@@ -1,8 +1,9 @@
 """CLI tool for UPSS."""
 
-import click
 import asyncio
 from pathlib import Path
+
+import click
 
 
 @click.group()
@@ -108,6 +109,7 @@ def migrate(input, base_path):
     click.echo(f"Migrating prompts from {input}...")
 
     import json
+
     from upss import UPSSClient
 
     # Load discovered prompts
