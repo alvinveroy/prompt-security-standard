@@ -1,0 +1,345 @@
+name: Publish Python Package
+
+on:
+  push:
+    tags:
+      - 'python-v*'  # Trigger on Python version tags (e.g., python-v1.2.3)
+  workflow_dispatch:  # Allow manual triggering
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 1.2.3)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  id-token: write  # Required for PyPI trusted publishing
+
+jobs:
+  validate-version:
+    name: Validate Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract.outputs.version }}
+      is_prerelease: ${{ steps.extract.outputs.is_prerelease }}
+    
+    steps:
+      - name: Extract version from tag or input
+        id: extract
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          else
+            # Extract from tag (python-v1.2.3 -> 1.2.3)
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
+            VERSION="${TAG_NAME#python-v}"
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          fi
+          
+          # Check if pre-release (contains -, alpha, beta, rc)
+          if echo "$VERSION" | grep -qE '(-|alpha|beta|rc)'; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+            echo "::notice::Detected pre-release version: $VERSION"
+          else
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+            echo "::notice::Detected stable release version: $VERSION"
+          fi
+          
+      - name: Validate semantic version format
+        run: |
+          VERSION="${{ steps.extract.outputs.version }}"
+          
+          # Validate semantic versioning format
+          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9\.]+)?(\+[a-zA-Z0-9\.]+)?$'; then
+            echo "::error::Invalid semantic version format: $VERSION"
+            echo "Expected format: MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]"
+            echo "Examples: 1.0.0, 1.2.3-beta.1, 2.0.0-rc.1+build.123"
+            exit 1
+          fi
+          
+          echo "✅ Valid semantic version: $VERSION"
+
+  update-version:
+    name: Update Version Files
+    needs: validate-version
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Update pyproject.toml version
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          cd implementations/python
+          
+          # Update version in pyproject.toml
+          sed -i "s/^version = \".*\"/version = \"${VERSION}\"/" pyproject.toml
+          
+          echo "✅ Updated pyproject.toml to version ${VERSION}"
+          
+      - name: Update CHANGELOG.md
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          RELEASE_DATE=$(date -u +%Y-%m-%d)
+          cd implementations/python
+          
+          # Check if version already exists in CHANGELOG
+          if grep -q "## \[${VERSION}\]" CHANGELOG.md; then
+            echo "::warning::Version ${VERSION} already exists in CHANGELOG.md"
+            exit 0
+          fi
+          
+          # Create changelog entry
+          cat > changelog_entry.tmp << 'EOF'
+          ## [${VERSION}] - ${RELEASE_DATE}
+
+          ### Changed
+          - Version bump to ${VERSION}
+
+          EOF
+          
+          # Substitute variables
+          sed -i "s/\${VERSION}/${VERSION}/g" changelog_entry.tmp
+          sed -i "s/\${RELEASE_DATE}/${RELEASE_DATE}/g" changelog_entry.tmp
+          
+          # Insert after Unreleased section
+          awk -v entry="$(cat changelog_entry.tmp)" '
+            /^## \[Unreleased\]/ {
+              print
+              if (getline) print
+              print ""
+              print entry
+              next
+            }
+            {print}
+          ' CHANGELOG.md > CHANGELOG.md.tmp
+          
+          mv CHANGELOG.md.tmp CHANGELOG.md
+          rm -f changelog_entry.tmp
+          
+          echo "✅ Updated CHANGELOG.md with version ${VERSION}"
+          
+      - name: Commit version updates
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          
+          git add implementations/python/pyproject.toml
+          git add implementations/python/CHANGELOG.md
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "::notice::No version changes to commit"
+          else
+            git commit -m "chore(python): bump version to ${VERSION} [skip ci]"
+            git push origin HEAD:main
+            echo "✅ Committed and pushed version updates"
+          fi
+
+  test:
+    name: Run Test Suite
+    needs: [validate-version, update-version]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main  # Use updated main branch
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Install dependencies
+        run: |
+          cd implementations/python
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      
+      - name: Run linting
+        run: |
+          cd implementations/python
+          flake8 upss/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 upss/ --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+      
+      - name: Run type checking
+        run: |
+          cd implementations/python
+          mypy upss/ --ignore-missing-imports || true
+      
+      - name: Run tests with coverage
+        run: |
+          cd implementations/python
+          pytest tests/ -v --cov=upss --cov-report=xml --cov-report=term
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: matrix.python-version == '3.11'
+        with:
+          file: ./implementations/python/coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  build:
+    name: Build Distribution Packages
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+      
+      - name: Build distribution packages
+        run: |
+          cd implementations/python
+          python -m build
+          
+          echo "📦 Built packages:"
+          ls -lh dist/
+      
+      - name: Check distribution packages
+        run: |
+          cd implementations/python
+          twine check dist/*
+          
+          echo "✅ Distribution packages are valid"
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-packages
+          path: implementations/python/dist/*
+          retention-days: 7
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: [validate-version, build]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/upss/
+    
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: python-packages
+          path: dist/
+      
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+          verbose: true
+          print-hash: true
+      
+      - name: Verify publication
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          echo "✅ Successfully published upss v${VERSION} to PyPI"
+          echo "📦 View at: https://pypi.org/project/upss/${VERSION}/"
+
+  create-release:
+    name: Create GitHub Release
+    needs: [validate-version, publish-pypi]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: python-packages
+          path: dist/
+      
+      - name: Extract changelog for version
+        id: changelog
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          cd implementations/python
+          
+          # Extract section between version headers
+          CHANGELOG_SECTION=$(awk -v ver="$VERSION" '
+            /^## \[/ {
+              if (found) exit
+              if ($0 ~ "\\[" ver "\\]") {
+                found=1
+                next
+              }
+            }
+            found && /^###/ { print }
+            found && !/^## \[/ && !/^###/ && NF { print }
+          ' CHANGELOG.md)
+          
+          if [ -z "$CHANGELOG_SECTION" ]; then
+            CHANGELOG_SECTION="Release version ${VERSION}"
+          fi
+          
+          # Save to file for multiline output
+          echo "$CHANGELOG_SECTION" > /tmp/changelog_section.txt
+          
+          echo "changelog_file=/tmp/changelog_section.txt" >> $GITHUB_OUTPUT
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: python-v${{ needs.validate-version.outputs.version }}
+          name: Python UPSS v${{ needs.validate-version.outputs.version }}
+          body_path: ${{ steps.changelog.outputs.changelog_file }}
+          files: dist/*
+          prerelease: ${{ needs.validate-version.outputs.is_prerelease }}
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Summary
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          IS_PRERELEASE="${{ needs.validate-version.outputs.is_prerelease }}"
+          
+          echo "## 🎉 Python Package Published Successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version**: \`${VERSION}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Type**: $([ "$IS_PRERELEASE" = "true" ] && echo "Pre-release 🚧" || echo "Stable Release ✅")" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Package Links" >> $GITHUB_STEP_SUMMARY
+          echo "- PyPI: https://pypi.org/project/upss/${VERSION}/" >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub Release: https://github.com/${{ github.repository }}/releases/tag/python-v${VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🚀 Installation" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "pip install upss==${VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY

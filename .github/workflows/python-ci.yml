@@ -1,0 +1,449 @@
+name: Python CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'implementations/python/**'
+      - '.github/workflows/python-ci.yml'
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'implementations/python/**'
+      - '.github/workflows/python-ci.yml'
+  workflow_dispatch:  # Allow manual triggering
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  lint:
+    name: Lint and Format Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Cache pip packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('implementations/python/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      
+      - name: Install dependencies
+        run: |
+          cd implementations/python
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      
+      - name: Run Black (format check)
+        run: |
+          cd implementations/python
+          echo "🎨 Checking code formatting with Black..."
+          black --check --diff upss/
+          
+          if [ $? -eq 0 ]; then
+            echo "✅ All files are properly formatted"
+          else
+            echo "❌ Some files need formatting. Run: black upss/"
+            exit 1
+          fi
+      
+      - name: Run isort (import order check)
+        run: |
+          cd implementations/python
+          echo "📚 Checking import order with isort..."
+          isort --check-only --diff upss/
+          
+          if [ $? -eq 0 ]; then
+            echo "✅ All imports are properly sorted"
+          else
+            echo "❌ Some imports need sorting. Run: isort upss/"
+            exit 1
+          fi
+      
+      - name: Run Flake8 (linting)
+        run: |
+          cd implementations/python
+          echo "🔍 Running Flake8 linter..."
+          
+          # Critical errors that must fail
+          echo "Checking for critical errors..."
+          flake8 upss/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          
+          # All other issues
+          echo "Checking for style issues..."
+          flake8 upss/ --count --max-complexity=10 --max-line-length=88 \
+            --exclude=__pycache__,.git,__init__.py \
+            --statistics
+          
+          echo "✅ Linting passed"
+      
+      - name: Create lint report
+        if: always()
+        run: |
+          cd implementations/python
+          
+          echo "## 🔍 Lint Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Format check result
+          if black --check upss/ > /dev/null 2>&1; then
+            echo "- ✅ **Black**: All files properly formatted" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ **Black**: Formatting issues found" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Import order result
+          if isort --check-only upss/ > /dev/null 2>&1; then
+            echo "- ✅ **isort**: All imports properly sorted" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ **isort**: Import order issues found" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Linting result
+          if flake8 upss/ --count --exit-zero > /dev/null 2>&1; then
+            echo "- ✅ **Flake8**: No issues found" >> $GITHUB_STEP_SUMMARY
+          else
+            ISSUES=$(flake8 upss/ --count --exit-zero | tail -n 1)
+            echo "- ⚠️ **Flake8**: ${ISSUES}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  type-check:
+    name: Type Checking
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Cache pip packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('implementations/python/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      
+      - name: Install dependencies
+        run: |
+          cd implementations/python
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      
+      - name: Run mypy
+        run: |
+          cd implementations/python
+          echo "🔎 Running mypy type checker..."
+          
+          mypy upss/ \
+            --ignore-missing-imports \
+            --show-error-codes \
+            --pretty \
+            --no-error-summary 2>&1 | tee mypy-report.txt
+          
+          # Check if there are any errors
+          if grep -q "error:" mypy-report.txt; then
+            echo "❌ Type checking found issues"
+            ERROR_COUNT=$(grep -c "error:" mypy-report.txt || echo "0")
+            echo "Found ${ERROR_COUNT} type errors"
+            cat mypy-report.txt
+            exit 1
+          else
+            echo "✅ No type errors found"
+          fi
+      
+      - name: Upload mypy report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mypy-report
+          path: implementations/python/mypy-report.txt
+          retention-days: 7
+
+  test:
+    name: Test Suite (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Cache pip packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-${{ hashFiles('implementations/python/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-py${{ matrix.python-version }}-pip-
+      
+      - name: Install dependencies
+        run: |
+          cd implementations/python
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      
+      - name: Run tests with coverage
+        run: |
+          cd implementations/python
+          echo "🧪 Running test suite..."
+          
+          pytest tests/ \
+            -v \
+            --cov=upss \
+            --cov-report=xml \
+            --cov-report=html \
+            --cov-report=term-missing \
+            --junit-xml=junit-report.xml
+          
+          echo "✅ Tests completed"
+      
+      - name: Check coverage threshold
+        run: |
+          cd implementations/python
+          
+          # Extract coverage percentage
+          COVERAGE=$(python -c "
+          import xml.etree.ElementTree as ET
+          tree = ET.parse('coverage.xml')
+          root = tree.getroot()
+          coverage = float(root.attrib['line-rate']) * 100
+          print(f'{coverage:.1f}')
+          ")
+          
+          echo "Coverage: ${COVERAGE}%"
+          
+          # Minimum threshold
+          THRESHOLD=80
+          
+          if (( $(echo "$COVERAGE < $THRESHOLD" | bc -l) )); then
+            echo "❌ Coverage ${COVERAGE}% is below threshold ${THRESHOLD}%"
+            exit 1
+          else
+            echo "✅ Coverage ${COVERAGE}% meets threshold ${THRESHOLD}%"
+          fi
+      
+      - name: Upload coverage reports
+        if: matrix.python-version == '3.11'
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./implementations/python/coverage.xml
+          flags: unittests
+          name: python-${{ matrix.python-version }}
+          fail_ci_if_error: false
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-py${{ matrix.python-version }}
+          path: |
+            implementations/python/junit-report.xml
+            implementations/python/htmlcov/
+          retention-days: 7
+      
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always() && matrix.python-version == '3.11'
+        with:
+          files: implementations/python/junit-report.xml
+          check_name: Test Results (Python ${{ matrix.python-version }})
+
+  security:
+    name: Security Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          cd implementations/python
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          pip install safety bandit
+      
+      - name: Run Safety (dependency vulnerability check)
+        run: |
+          cd implementations/python
+          echo "🔒 Checking for known security vulnerabilities..."
+          
+          # Generate requirements from installed packages
+          pip freeze > requirements-frozen.txt
+          
+          safety check --file requirements-frozen.txt --output text || true
+          
+          echo "✅ Security check completed"
+      
+      - name: Run Bandit (security linter)
+        run: |
+          cd implementations/python
+          echo "🛡️ Running Bandit security linter..."
+          
+          bandit -r upss/ \
+            -f json \
+            -o bandit-report.json \
+            --exit-zero
+          
+          # Display results
+          bandit -r upss/ -f screen
+          
+          echo "✅ Bandit scan completed"
+      
+      - name: Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            implementations/python/bandit-report.json
+          retention-days: 7
+
+  build-check:
+    name: Build Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+      
+      - name: Build distribution packages
+        run: |
+          cd implementations/python
+          echo "📦 Building distribution packages..."
+          python -m build
+          
+          echo "Built packages:"
+          ls -lh dist/
+      
+      - name: Check package metadata
+        run: |
+          cd implementations/python
+          echo "🔍 Validating package metadata..."
+          twine check dist/*
+          
+          echo "✅ Package metadata is valid"
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-dist-packages
+          path: implementations/python/dist/*
+          retention-days: 7
+
+  summary:
+    name: CI Summary
+    runs-on: ubuntu-latest
+    needs: [lint, type-check, test, security, build-check]
+    if: always()
+    
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## 🎯 Python CI Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Job status table
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          
+          # Lint
+          if [ "${{ needs.lint.result }}" = "success" ]; then
+            echo "| 🎨 Lint & Format | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| 🎨 Lint & Format | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Type Check
+          if [ "${{ needs.type-check.result }}" = "success" ]; then
+            echo "| 🔎 Type Checking | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| 🔎 Type Checking | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Tests
+          if [ "${{ needs.test.result }}" = "success" ]; then
+            echo "| 🧪 Tests | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| 🧪 Tests | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Security
+          if [ "${{ needs.security.result }}" = "success" ]; then
+            echo "| 🔒 Security | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| 🔒 Security | ⚠️ Issues Found |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Build
+          if [ "${{ needs.build-check.result }}" = "success" ]; then
+            echo "| 📦 Build | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| 📦 Build | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Overall status
+          if [ "${{ needs.lint.result }}" = "success" ] && \
+             [ "${{ needs.type-check.result }}" = "success" ] && \
+             [ "${{ needs.test.result }}" = "success" ] && \
+             [ "${{ needs.build-check.result }}" = "success" ]; then
+            echo "### ✅ All checks passed! Ready for merge." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ❌ Some checks failed. Please review and fix issues." >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Check overall status
+        run: |
+          if [ "${{ needs.lint.result }}" != "success" ] || \
+             [ "${{ needs.type-check.result }}" != "success" ] || \
+             [ "${{ needs.test.result }}" != "success" ] || \
+             [ "${{ needs.build-check.result }}" != "success" ]; then
+            echo "CI checks failed"
+            exit 1
+          fi
