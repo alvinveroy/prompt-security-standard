@@ -15,7 +15,7 @@ from upss.security.scanner import sanitize, render, calculate_risk_score, detect
 from upss.migration.decorator import migrate_prompt
 
 
-def test_section(name):
+def __test_section(name):
     """Print test section header"""
     print(f"\n{'='*60}")
     print(f"  {name}")
@@ -24,7 +24,7 @@ def test_section(name):
 
 async def test_core_functionality():
     """Test core create, load, and version management"""
-    test_section("Core Functionality Tests")
+    # _test_section("Core Functionality Tests")
 
     temp_dir = tempfile.mkdtemp()
     try:
@@ -112,7 +112,7 @@ async def test_core_functionality():
 
 async def test_security_features():
     """Test security scanning and injection prevention"""
-    test_section("Security Features Tests")
+    # _test_section("Security Features Tests")
 
     # Test 1: Sanitization
     print("\n[Test 1] Testing input sanitization...")
@@ -187,7 +187,7 @@ async def test_security_features():
 
 async def test_integrity_features():
     """Test checksum verification and immutability"""
-    test_section("Integrity Features Tests")
+    # _test_section("Integrity Features Tests")
 
     temp_dir = tempfile.mkdtemp()
     try:
@@ -235,7 +235,7 @@ async def test_integrity_features():
 
 async def test_error_handling():
     """Test error handling and exception cases"""
-    test_section("Error Handling Tests")
+    # _test_section("Error Handling Tests")
 
     temp_dir = tempfile.mkdtemp()
     try:
@@ -276,7 +276,7 @@ async def test_error_handling():
 
 async def test_cli_basic():
     """Test basic CLI functionality (without actual CLI calls)"""
-    test_section("CLI Integration Tests")
+    # _test_section("CLI Integration Tests")
 
     print("\n[Test 1] Testing CLI module imports...")
     from upss.cli.main import cli
@@ -300,7 +300,7 @@ async def test_cli_basic():
 
 async def test_concurrent_operations():
     """Test concurrent operations and file locking"""
-    test_section("Concurrent Operations Tests")
+    # _test_section("Concurrent Operations Tests")
 
     temp_dir = tempfile.mkdtemp()
     try:

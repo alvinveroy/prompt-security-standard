@@ -96,9 +96,7 @@ def discover(path, output, extensions):
 
     click.echo(f"\n✓ Found {len(discovered)} potential prompts")
     click.echo(f"✓ Results saved to {output}")
-    click.echo(
-        f"\nReview the discovered prompts and use 'upss migrate' to import them."
-    )
+    click.echo("\nReview the discovered prompts and use 'upss migrate' to import them.")
 
 
 @cli.command()

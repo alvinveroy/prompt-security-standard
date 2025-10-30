@@ -1,8 +1,8 @@
 """Migration tools for transitioning to UPSS."""
 
-from typing import Callable, Any
-from functools import wraps
 import logging
+from functools import wraps
+from typing import Any, Callable
 
 logger = logging.getLogger(__name__)
 

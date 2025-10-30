@@ -1,10 +1,10 @@
 """PostgreSQL storage backend for UPSS."""
 
-from typing import Optional
 from pathlib import Path
+from typing import Optional
 
-from ..core.models import PromptContent
 from ..core.exceptions import NotImplementedError
+from ..core.models import PromptContent
 
 
 class PostgreSQLStorage:
