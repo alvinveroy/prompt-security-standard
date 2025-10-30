@@ -2,7 +2,7 @@
 
 import logging
 from functools import wraps
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ def migrate_prompt(prompt_name: str) -> Callable:
                 logger.warning(
                     f"UPSS load failed for {prompt_name}, using fallback: {e}"
                 )
-                return await fallback_func(*args, **kwargs)
+                return cast(str, await fallback_func(*args, **kwargs))
 
         return wrapper
 

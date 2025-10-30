@@ -34,11 +34,11 @@ class PostgreSQLStorage:
 
     async def init_pool(self) -> None:
         """Initialize connection pool."""
-        pass
+        raise NotImplementedError("PostgreSQL storage not yet implemented")
 
     async def load(self, name: str, version: Optional[str] = None) -> PromptContent:
         """Load prompt from PostgreSQL."""
-        pass
+        raise NotImplementedError("PostgreSQL storage not yet implemented")
 
     async def create(
         self,
@@ -51,7 +51,7 @@ class PostgreSQLStorage:
         approved: bool = False,
     ) -> str:
         """Create new prompt in PostgreSQL."""
-        pass
+        raise NotImplementedError("PostgreSQL storage not yet implemented")
 
     async def rollback(self, name: str, to_version: str) -> bool:
         """Rollback to previous version."""

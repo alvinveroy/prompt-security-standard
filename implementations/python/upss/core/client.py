@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from ..security.scanner import render, sanitize
 from ..storage.filesystem import FilesystemStorage
@@ -262,7 +262,7 @@ class UPSSClient:
 
         return entries
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+    async def __aexit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Async context manager exit."""
         # Cleanup if needed
         pass

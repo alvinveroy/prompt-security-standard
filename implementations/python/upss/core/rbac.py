@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, List, Set, cast
 
 from ..core.exceptions import PermissionError
 
@@ -37,7 +37,7 @@ class RBACManager:
     def _load_roles(self) -> Dict[str, Any]:
         """Load roles configuration."""
         with open(self.roles_file, "r", encoding="utf-8") as f:
-            return json.load(f)
+            return cast(Dict[str, Any], json.load(f))
 
     def _save_roles(self, roles_data: Dict[str, Any]) -> None:
         """Save roles configuration."""
@@ -122,4 +122,4 @@ class RBACManager:
             List of role names
         """
         roles_data = self._load_roles()
-        return roles_data.get("assignments", {}).get(user_id, [])
+        return cast(List[str], roles_data.get("assignments", {}).get(user_id, []))

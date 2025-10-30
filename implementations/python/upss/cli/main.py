@@ -2,6 +2,7 @@
 
 import asyncio
 from pathlib import Path
+from typing import Optional
 
 import click
 
@@ -19,7 +20,7 @@ def cli() -> None:
 )
 @click.option("--base-path", default="./prompts", help="Base path for prompts")
 @click.option("--db-url", help="PostgreSQL connection string")
-def init(mode, base_path, db_url) -> None:
+def init(mode: str, base_path: str, db_url: Optional[str]) -> None:
     """Initialize UPSS configuration."""
     click.echo(f"Initializing UPSS in {mode} mode...")
 
@@ -55,7 +56,7 @@ def init(mode, base_path, db_url) -> None:
 @click.option("--path", required=True, help="Path to scan for prompts")
 @click.option("--output", default="discovered_prompts.json", help="Output file")
 @click.option("--extensions", default=".py,.js,.java", help="File extensions to scan")
-def discover(path, output, extensions) -> None:
+def discover(path: str, output: str, extensions: str) -> None:
     """Discover hardcoded prompts in codebase."""
     click.echo(f"Scanning {path} for hardcoded prompts...")
 
@@ -102,7 +103,7 @@ def discover(path, output, extensions) -> None:
 @cli.command()
 @click.option("--input", required=True, help="Input JSON file from discover")
 @click.option("--base-path", default="./prompts", help="UPSS prompts directory")
-def migrate(input, base_path) -> None:
+def migrate(input: str, base_path: str) -> None:
     """Migrate discovered prompts to UPSS."""
     click.echo(f"Migrating prompts from {input}...")
 

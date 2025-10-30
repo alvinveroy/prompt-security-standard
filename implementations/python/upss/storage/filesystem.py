@@ -5,7 +5,7 @@ import json
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 
 import filelock
 
@@ -247,7 +247,7 @@ class FilesystemStorage:
         """Load metadata from file."""
         metadata_file = self.base_path / "metadata.json"
         with open(metadata_file, "r", encoding="utf-8") as f:
-            return json.load(f)
+            return cast(Dict[str, Any], json.load(f))
 
     def _save_metadata(self, metadata: Dict[str, Any]) -> None:
         """Save metadata to file."""
