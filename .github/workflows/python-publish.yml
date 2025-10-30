@@ -141,8 +141,15 @@ jobs:
             echo "::notice::No version changes to commit"
           else
             git commit -m "chore(python): bump version to ${VERSION} [skip ci]"
-            git push origin HEAD:main
-            echo "✅ Committed and pushed version updates"
+            
+            # Try to push, but handle branch protection gracefully
+            if git push origin HEAD:main 2>&1 | grep -q "protected branch hook\|branch protection rule"; then
+              echo "::warning::Branch protection detected - unable to push version updates automatically"
+              echo "::warning::Please manually create a pull request with the committed changes"
+              echo "::warning::The workflow will continue assuming version files are already correct"
+            else
+              echo "✅ Committed and pushed version updates"
+            fi
           fi
 
   test:
