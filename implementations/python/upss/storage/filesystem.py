@@ -1,12 +1,11 @@
 """Filesystem storage backend for UPSS."""
 
-import asyncio
 import hashlib
 import json
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 import filelock
 
@@ -14,7 +13,6 @@ from ..core.exceptions import (
     ConflictError,
     IntegrityError,
     NotFoundError,
-    StorageError,
 )
 from ..core.models import PromptContent
 

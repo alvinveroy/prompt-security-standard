@@ -4,8 +4,6 @@ import logging
 import re
 from typing import List, Tuple
 
-from ..core.exceptions import SecurityError
-
 logger = logging.getLogger(__name__)
 
 # Dangerous patterns for injection detection

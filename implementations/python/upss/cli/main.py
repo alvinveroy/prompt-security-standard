@@ -43,12 +43,12 @@ def init(mode, base_path, db_url):
     with open(metadata_file, "w") as f:
         json.dump({"prompts": {}}, f, indent=2)
 
-    click.echo(f"✓ Created directory structure at {base}")
-    click.echo(f"✓ Initialized metadata files")
-    click.echo(f"\nNext steps:")
-    click.echo(f"  1. Add prompts to {base}/system/ or {base}/user/")
-    click.echo(f"  2. Use upss discover to find hardcoded prompts")
-    click.echo(f"  3. Import with upss migrate")
+    click.echo("✓ Created directory structure at {base}")
+    click.echo("✓ Initialized metadata files")
+    click.echo("\nNext steps:")
+    click.echo("  1. Add prompts to {base}/system/ or {base}/user/")
+    click.echo("  2. Use upss discover to find hardcoded prompts")
+    click.echo("  3. Import with upss migrate")
 
 
 @cli.command()
@@ -138,7 +138,7 @@ def migrate(input, base_path):
                     failed += 1
                     click.echo(f"✗ Failed: {name} - {e}", err=True)
 
-            click.echo(f"\n✓ Migration complete: {success} successful, {failed} failed")
+            click.echo("\n✓ Migration complete: {success} successful, {failed} failed")
 
     asyncio.run(do_migrate())
 

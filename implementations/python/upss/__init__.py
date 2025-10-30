@@ -1,7 +1,8 @@
 """
 Universal Prompt Security Standard (UPSS) - Python Implementation
 
-A secure, production-ready library for managing LLM prompts following the UPSS framework.
+A secure, production-ready library for managing LLM prompts following the UPSS
+framework.
 """
 
 __version__ = "2.0.0"
