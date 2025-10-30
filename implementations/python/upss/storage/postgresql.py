@@ -3,7 +3,11 @@
 from pathlib import Path
 from typing import Optional
 
-from ..core.exceptions import NotImplementedError
+from ..core.exceptions import (
+    ConfigurationError,
+    IntegrityError,
+    NotFoundError,
+)
 from ..core.models import PromptContent
 
 
