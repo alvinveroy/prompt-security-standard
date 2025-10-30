@@ -3,7 +3,7 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from ..core.models import AuditEntry
 
@@ -27,8 +27,8 @@ class AuditLogger:
         user_id: str,
         prompt_name: str,
         success: bool,
-        details: dict = None,
-    ):
+        details: Optional[dict] = None,
+    ) -> None:
         """
         Log an audit event.
 

@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from typing import Dict, List, Set
+from typing import Any, Dict, List, Set
 
 from ..core.exceptions import PermissionError
 
@@ -20,7 +20,7 @@ class RBACManager:
         self.roles_file = roles_file
         self._ensure_file()
 
-    def _ensure_file(self):
+    def _ensure_file(self) -> None:
         """Ensure roles file exists with default structure."""
         if not self.roles_file.exists():
             default_roles = {
@@ -34,12 +34,12 @@ class RBACManager:
             with open(self.roles_file, "w", encoding="utf-8") as f:
                 json.dump(default_roles, f, indent=2)
 
-    def _load_roles(self) -> Dict:
+    def _load_roles(self) -> Dict[str, Any]:
         """Load roles configuration."""
         with open(self.roles_file, "r", encoding="utf-8") as f:
             return json.load(f)
 
-    def _save_roles(self, roles_data: Dict):
+    def _save_roles(self, roles_data: Dict[str, Any]) -> None:
         """Save roles configuration."""
         with open(self.roles_file, "w", encoding="utf-8") as f:
             json.dump(roles_data, f, indent=2)
@@ -75,7 +75,7 @@ class RBACManager:
 
         return True
 
-    def assign_role(self, user_id: str, role: str):
+    def assign_role(self, user_id: str, role: str) -> None:
         """
         Assign a role to a user.
 
@@ -96,7 +96,7 @@ class RBACManager:
 
         self._save_roles(roles_data)
 
-    def revoke_role(self, user_id: str, role: str):
+    def revoke_role(self, user_id: str, role: str) -> None:
         """
         Revoke a role from a user.
 

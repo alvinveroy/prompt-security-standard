@@ -28,7 +28,7 @@ class PostgreSQLStorage:
             "Please use filesystem mode or contribute to implementation."
         )
 
-    async def init_pool(self):
+    async def init_pool(self) -> None:
         """Initialize connection pool."""
         pass
 

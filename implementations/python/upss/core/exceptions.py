@@ -1,10 +1,12 @@
 """Exception classes for UPSS."""
 
+from typing import Optional
+
 
 class UPSSError(Exception):
     """Base exception for all UPSS errors."""
 
-    def __init__(self, message: str, details: dict = None, cause: Exception = None):
+    def __init__(self, message: str, details: Optional[dict] = None, cause: Optional[Exception] = None):
         super().__init__(message)
         self.message = message
         self.details = details or {}

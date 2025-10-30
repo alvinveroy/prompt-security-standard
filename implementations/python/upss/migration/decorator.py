@@ -7,7 +7,7 @@ from typing import Any, Callable
 logger = logging.getLogger(__name__)
 
 
-def migrate_prompt(prompt_name: str):
+def migrate_prompt(prompt_name: str) -> Callable:
     """
     Decorator for gradual migration from hardcoded prompts to UPSS.
 
