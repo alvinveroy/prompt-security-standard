@@ -42,7 +42,7 @@ class UPSSClient:
         self._enable_rbac = enable_rbac
         self._enable_checksum = enable_checksum
         self._block_pii = block_pii
-        self._audit_log = []
+        self._audit_log: List[AuditEntry] = []
 
         # Initialize storage
         if mode == "filesystem":
@@ -153,7 +153,7 @@ class UPSSClient:
 
     def _log_access(
         self, name: str, user_id: str, action: str, version: Optional[str] = None
-    ):
+    ) -> None:
         """Log access to audit log."""
         entry = AuditEntry(
             timestamp=datetime.utcnow(),
@@ -169,7 +169,7 @@ class UPSSClient:
         """Get the audit log."""
         return self._audit_log.copy()
 
-    async def __aenter__(self):
+    async def __aenter__(self) -> "UPSSClient":
         """Async context manager entry."""
         return self
 
@@ -239,7 +239,7 @@ class UPSSClient:
             List of audit entries
         """
         audit_file = self._base_path / "audit.jsonl"
-        entries = []
+        entries: List[AuditEntry] = []
 
         if audit_file.exists():
             with open(audit_file, "r") as f:
@@ -262,7 +262,7 @@ class UPSSClient:
 
         return entries
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         """Async context manager exit."""
         # Cleanup if needed
         pass

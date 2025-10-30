@@ -8,7 +8,7 @@ import click
 
 @click.group()
 @click.version_option(version="2.0.0")
-def cli():
+def cli() -> None:
     """UPSS - Universal Prompt Security Standard CLI"""
     pass
 
@@ -19,7 +19,7 @@ def cli():
 )
 @click.option("--base-path", default="./prompts", help="Base path for prompts")
 @click.option("--db-url", help="PostgreSQL connection string")
-def init(mode, base_path, db_url):
+def init(mode, base_path, db_url) -> None:
     """Initialize UPSS configuration."""
     click.echo(f"Initializing UPSS in {mode} mode...")
 
@@ -55,7 +55,7 @@ def init(mode, base_path, db_url):
 @click.option("--path", required=True, help="Path to scan for prompts")
 @click.option("--output", default="discovered_prompts.json", help="Output file")
 @click.option("--extensions", default=".py,.js,.java", help="File extensions to scan")
-def discover(path, output, extensions):
+def discover(path, output, extensions) -> None:
     """Discover hardcoded prompts in codebase."""
     click.echo(f"Scanning {path} for hardcoded prompts...")
 
@@ -102,7 +102,7 @@ def discover(path, output, extensions):
 @cli.command()
 @click.option("--input", required=True, help="Input JSON file from discover")
 @click.option("--base-path", default="./prompts", help="UPSS prompts directory")
-def migrate(input, base_path):
+def migrate(input, base_path) -> None:
     """Migrate discovered prompts to UPSS."""
     click.echo(f"Migrating prompts from {input}...")
 
@@ -114,7 +114,7 @@ def migrate(input, base_path):
     with open(input, "r") as f:
         prompts = json.load(f)
 
-    async def do_migrate():
+    async def do_migrate() -> None:
         async with UPSSClient(base_path=base_path) as client:
             success = 0
             failed = 0

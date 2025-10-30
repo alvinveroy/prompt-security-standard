@@ -32,7 +32,7 @@ class FilesystemStorage:
         self.enable_checksum = enable_checksum
         self._ensure_structure()
 
-    def _ensure_structure(self):
+    def _ensure_structure(self) -> None:
         """Create required directory structure."""
         self.base_path.mkdir(parents=True, exist_ok=True)
         (self.base_path / "metadata.json").touch(exist_ok=True)
@@ -249,7 +249,7 @@ class FilesystemStorage:
         with open(metadata_file, "r", encoding="utf-8") as f:
             return json.load(f)
 
-    def _save_metadata(self, metadata: Dict[str, Any]):
+    def _save_metadata(self, metadata: Dict[str, Any]) -> None:
         """Save metadata to file."""
         metadata_file = self.base_path / "metadata.json"
         with open(metadata_file, "w", encoding="utf-8") as f:
