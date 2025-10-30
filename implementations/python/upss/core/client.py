@@ -1,8 +1,8 @@
 import asyncio
-import hashlib
 import json
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
+from datetime import datetime
 
 from .models import PromptContent, AuditEntry
 from .exceptions import (
@@ -13,6 +13,8 @@ from .exceptions import (
     PermissionError,
     IntegrityError
 )
+from ..storage.filesystem import FilesystemStorage
+from ..security.scanner import sanitize, render, calculate_risk_score, detect_pii
 
 
 class UPSSClient:
@@ -50,7 +52,9 @@ class UPSSClient:
         
         # Initialize storage
         if mode == "filesystem":
-            self._base_path.mkdir(parents=True, exist_ok=True)
+            self.storage = FilesystemStorage(self._base_path, enable_checksum=self._enable_checksum)
+        else:
+            raise NotImplementedError("PostgreSQL mode not yet implemented")
     
     @property
     def mode(self) -> str:
@@ -97,64 +101,13 @@ class UPSSClient:
             # TODO: Implement RBAC permission check
             pass
         
-        if self._mode == "filesystem":
-            return await self._load_filesystem(name, user_id, version)
-        else:
-            raise NotImplementedError("PostgreSQL mode not yet implemented")
-    
-    async def _load_filesystem(self, name: str, user_id: str, version: Optional[str]) -> PromptContent:
-        """Load prompt from filesystem storage."""
-        prompt_dir = self._base_path / name
-        
-        if not prompt_dir.exists():
-            raise NotFoundError(f"Prompt not found: {name}")
-        
-        # Find version to load
-        if version is None:
-            # Load latest version
-            version_file = prompt_dir / "latest.json"
-            if not version_file.exists():
-                raise NotFoundError(f"No versions found for prompt: {name}")
-            
-            with open(version_file, 'r') as f:
-                latest_info = json.load(f)
-                version = latest_info['version']
-        
-        # Load specific version
-        version_dir = prompt_dir / version
-        if not version_dir.exists():
-            raise NotFoundError(f"Version {version} not found for prompt: {name}")
-        
-        # Load content
-        content_file = version_dir / "content.md"
-        metadata_file = version_dir / "metadata.json"
-        
-        if not content_file.exists() or not metadata_file.exists():
-            raise NotFoundError(f"Prompt files missing for {name}@{version}")
-        
-        with open(content_file, 'r') as f:
-            content = f.read()
-        
-        with open(metadata_file, 'r') as f:
-            metadata = json.load(f)
-        
-        # Verify checksum if enabled
-        if self._enable_checksum:
-            calculated_checksum = hashlib.sha256(content.encode()).hexdigest()
-            if calculated_checksum != metadata.get('checksum'):
-                raise IntegrityError("Checksum verification failed")
-        
-        prompt_content = PromptContent(
-            name=name,
-            version=version,
-            content=content,
-            metadata=metadata
-        )
+        prompt_content = await self.storage.load(name, version)
         
         # Log access
         self._log_access(name, user_id, "load", version)
         
         return prompt_content
+    
     
     async def create(
         self,
@@ -187,77 +140,30 @@ class UPSSClient:
             # TODO: Implement RBAC permission check
             pass
         
-        if self._mode == "filesystem":
-            return await self._create_filesystem(name, content, user_id, version, category, risk_level)
-        else:
-            raise NotImplementedError("PostgreSQL mode not yet implemented")
-    
-    async def _create_filesystem(
-        self,
-        name: str,
-        content: str,
-        user_id: str,
-        version: str,
-        category: str,
-        risk_level: str
-    ) -> str:
-        """Create prompt in filesystem storage."""
-        import uuid
-        
-        prompt_dir = self._base_path / name
-        version_dir = prompt_dir / version
-        
-        # Check if version already exists
-        if version_dir.exists():
-            raise ConflictError(f"Prompt {name}@{version} already exists")
-        
-        # Create directories
-        prompt_dir.mkdir(exist_ok=True)
-        version_dir.mkdir(exist_ok=True)
-        
-        # Calculate checksum
-        checksum = hashlib.sha256(content.encode()).hexdigest()
-        
-        # Create metadata
-        metadata = {
-            'uuid': str(uuid.uuid4()),
-            'name': name,
-            'version': version,
-            'category': category,
-            'risk_level': risk_level,
-            'checksum': checksum,
-            'created_by': user_id,
-            'created_at': asyncio.get_event_loop().time()
-        }
-        
-        # Write files
-        content_file = version_dir / "content.md"
-        metadata_file = version_dir / "metadata.json"
-        
-        with open(content_file, 'w') as f:
-            f.write(content)
-        
-        with open(metadata_file, 'w') as f:
-            json.dump(metadata, f, indent=2)
-        
-        # Update latest version
-        latest_file = prompt_dir / "latest.json"
-        with open(latest_file, 'w') as f:
-            json.dump({'version': version}, f, indent=2)
+        prompt_id = await self.storage.create(
+            name=name,
+            content=content,
+            version=version,
+            category=category,
+            risk_level=risk_level,
+            user_id=user_id
+        )
         
         # Log creation
         self._log_access(name, user_id, "create", version)
         
-        return metadata['uuid']
+        return prompt_id
+    
     
     def _log_access(self, name: str, user_id: str, action: str, version: Optional[str] = None):
         """Log access to audit log."""
         entry = AuditEntry(
-            timestamp=asyncio.get_event_loop().time(),
+            timestamp=datetime.utcnow(),
+            event_type=action,
             user_id=user_id,
             prompt_name=name,
-            version=version,
-            action=action
+            success=True,
+            details={"version": version} if version else {}
         )
         self._audit_log.append(entry)
     
@@ -268,6 +174,95 @@ class UPSSClient:
     async def __aenter__(self):
         """Async context manager entry."""
         return self
+    
+    async def rollback(self, name: str, to_version: str) -> bool:
+        """Rollback a prompt to a previous version.
+        
+        Args:
+            name: Prompt name
+            to_version: Target version to rollback to
+            
+        Returns:
+            True if successful
+            
+        Raises:
+            NotFoundError: If prompt or version not found
+        """
+        # Check permissions if RBAC enabled
+        if self._enable_rbac:
+            # TODO: Implement RBAC permission check
+            pass
+        
+        success = await self.storage.rollback(name, to_version)
+        
+        # Log rollback
+        self._log_access(name, "system", "rollback", to_version)
+        
+        return success
+    
+    async def render(
+        self,
+        system_prompt: str,
+        user_input: str,
+        style: str = "xml",
+        allow_unsafe: bool = False
+    ) -> str:
+        """Render a prompt with security checks.
+        
+        Args:
+            system_prompt: System prompt content
+            user_input: User input to render
+            style: Rendering style ("xml" or "markdown")
+            allow_unsafe: Allow unsafe content
+            
+        Returns:
+            Rendered prompt string
+        """
+        return render(system_prompt, user_input, style=style, allow_unsafe=allow_unsafe)
+    
+    async def sanitize(self, user_input: str) -> tuple[str, bool]:
+        """Sanitize user input for security.
+        
+        Args:
+            user_input: Raw user input
+            
+        Returns:
+            Tuple of (sanitized_input, was_clean)
+        """
+        return sanitize(user_input)
+    
+    async def audit_query(self, limit: Optional[int] = None) -> List[AuditEntry]:
+        """Query audit log from persistent storage.
+        
+        Args:
+            limit: Maximum number of entries to return
+            
+        Returns:
+            List of audit entries
+        """
+        audit_file = self._base_path / "audit.jsonl"
+        entries = []
+        
+        if audit_file.exists():
+            with open(audit_file, 'r') as f:
+                for line in f:
+                    if limit and len(entries) >= limit:
+                        break
+                    try:
+                        data = json.loads(line.strip())
+                        entry = AuditEntry(
+                            timestamp=datetime.fromisoformat(data['timestamp']),
+                            event_type=data['event_type'],
+                            user_id=data['user_id'],
+                            prompt_name=data['prompt_name'],
+                            success=data['success'],
+                            details=data.get('details', {})
+                        )
+                        entries.append(entry)
+                    except (json.JSONDecodeError, KeyError, ValueError):
+                        continue
+        
+        return entries
     
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         """Async context manager exit."""
