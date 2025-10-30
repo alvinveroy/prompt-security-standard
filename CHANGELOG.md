@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Python library implementation (v2.0.0) in `implementations/python/`
+  - Core UPSSClient with filesystem and PostgreSQL mode support
+  - Security features: sanitize(), render(), pattern detection, PII detection
+  - Integrity features: SHA-256 checksum verification, rollback support
+  - RBAC (Role-Based Access Control) for filesystem and PostgreSQL modes
+  - Audit logging with JSONL format
+  - Migration tools: discover, decorator-based migration
+  - CLI tool: `upss init`, `upss discover`, `upss migrate`
+  - Comprehensive test suite
+  - Full documentation and examples
+
 ## [1.0.1] - 2025-10-29
 
 ### Release Notes
