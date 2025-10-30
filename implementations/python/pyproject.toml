@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "upss"
-version = "2.0.0"
+version = "2.0.1"
 description = "Universal Prompt Security Standard - Python Implementation"
 readme = "README.md"
 authors = [

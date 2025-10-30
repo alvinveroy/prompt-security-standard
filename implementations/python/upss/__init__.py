@@ -5,7 +5,7 @@ A secure, production-ready library for managing LLM prompts following the UPSS
 framework.
 """
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 __author__ = "UPSS Contributors"
 
 from .core.client import UPSSClient

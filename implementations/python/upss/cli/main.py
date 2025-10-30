@@ -8,7 +8,7 @@ import click
 
 
 @click.group()
-@click.version_option(version="2.0.0")
+@click.version_option(version="2.0.1")
 def cli() -> None:
     """UPSS - Universal Prompt Security Standard CLI"""
     pass
