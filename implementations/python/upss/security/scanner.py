@@ -47,12 +47,12 @@ def sanitize(user_input: str) -> Tuple[str, bool]:
 
     # Escape special characters
     special_chars = {
-        '"': '&quot;',
-        "'": '&#x27;',
-        "{": '&#123;',
-        "}": '&#125;',
-        "<": '&lt;',
-        ">": '&gt;',
+        '"': "&quot;",
+        "'": "&#x27;",
+        "{": "&#123;",
+        "}": "&#125;",
+        "<": "&lt;",
+        ">": "&gt;",
     }
 
     for char, escape in special_chars.items():

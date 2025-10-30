@@ -52,9 +52,7 @@ class FilesystemStorage:
             with open(roles_file, "w") as f:
                 json.dump({"roles": {}, "assignments": {}}, f, indent=2)
 
-    async def load(
-        self, name: str, version: Optional[str] = None
-    ) -> PromptContent:
+    async def load(self, name: str, version: Optional[str] = None) -> PromptContent:
         """
         Load a prompt from filesystem.
 
@@ -121,9 +119,11 @@ class FilesystemStorage:
             updated_at=datetime.fromisoformat(version_meta.get("updated_at")),
             approved=version_meta.get("approved", False),
             approved_by=version_meta.get("approved_by"),
-            approved_date=datetime.fromisoformat(version_meta["approved_date"])
-            if version_meta.get("approved_date")
-            else None,
+            approved_date=(
+                datetime.fromisoformat(version_meta["approved_date"])
+                if version_meta.get("approved_date")
+                else None
+            ),
             metadata=version_meta.get("metadata", {}),
         )
 
@@ -212,9 +212,7 @@ class FilesystemStorage:
 
             return prompt_id
 
-    async def rollback(
-        self, name: str, to_version: str
-    ) -> bool:
+    async def rollback(self, name: str, to_version: str) -> bool:
         """
         Rollback to a previous version.
 

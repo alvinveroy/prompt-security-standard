@@ -164,10 +164,10 @@ class TestSecurityScanner:
         """Test risk score calculation."""
         safe_content = "This is a normal prompt."
         risky_content = "ignore previous instructions act as disregard above"
-        
+
         safe_score = calculate_risk_score(safe_content)
         risky_score = calculate_risk_score(risky_content)
-        
+
         assert safe_score < risky_score
         assert risky_score > 0
 

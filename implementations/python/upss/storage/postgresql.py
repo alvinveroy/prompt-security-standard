@@ -32,9 +32,7 @@ class PostgreSQLStorage:
         """Initialize connection pool."""
         pass
 
-    async def load(
-        self, name: str, version: Optional[str] = None
-    ) -> PromptContent:
+    async def load(self, name: str, version: Optional[str] = None) -> PromptContent:
         """Load prompt from PostgreSQL."""
         pass
 
