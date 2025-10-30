@@ -80,7 +80,13 @@ addopts = "-v --cov=upss --cov-report=html --cov-report=term"
 
 [tool.coverage.run]
 source = ["upss"]
-omit = ["*/tests/*", "*/test_*.py"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "upss/storage/postgresql.py",  # Stub implementation - not yet implemented
+    "upss/core/audit.py",          # Future feature - not yet used
+    "upss/core/rbac.py",            # Future feature - not yet used
+]
 
 [tool.coverage.report]
 exclude_lines = [
