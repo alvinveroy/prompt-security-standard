@@ -3,11 +3,6 @@
 from pathlib import Path
 from typing import Optional
 
-from ..core.exceptions import (
-    ConfigurationError,
-    IntegrityError,
-    NotFoundError,
-)
 from ..core.models import PromptContent
 
 
@@ -55,4 +50,4 @@ class PostgreSQLStorage:
 
     async def rollback(self, name: str, to_version: str) -> bool:
         """Rollback to previous version."""
-        pass
+        raise NotImplementedError("PostgreSQL storage not yet implemented")
