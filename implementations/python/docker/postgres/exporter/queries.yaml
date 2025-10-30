@@ -1,0 +1,83 @@
+# Custom queries for PostgreSQL Exporter
+# Exposes UPSS-specific metrics for Prometheus
+
+# Prompt statistics
+upss_prompts:
+  query: "SELECT category, risk_level, COUNT(*) as count FROM upss.prompts GROUP BY category, risk_level"
+  master: true
+  metrics:
+    - category:
+        usage: "LABEL"
+        description: "Prompt category"
+    - risk_level:
+        usage: "LABEL"
+        description: "Risk level"
+    - count:
+        usage: "GAUGE"
+        description: "Number of prompts"
+
+# Audit log statistics
+upss_audit_events:
+  query: "SELECT event_type, success, COUNT(*) as count FROM upss.audit_logs WHERE timestamp > NOW() - INTERVAL '1 hour' GROUP BY event_type, success"
+  master: true
+  metrics:
+    - event_type:
+        usage: "LABEL"
+        description: "Event type"
+    - success:
+        usage: "LABEL"
+        description: "Success status"
+    - count:
+        usage: "COUNTER"
+        description: "Number of events in last hour"
+
+# User role statistics
+upss_user_roles:
+  query: "SELECT role_name, COUNT(*) as count FROM upss.user_roles WHERE expires_at IS NULL OR expires_at > NOW() GROUP BY role_name"
+  master: true
+  metrics:
+    - role_name:
+        usage: "LABEL"
+        description: "Role name"
+    - count:
+        usage: "GAUGE"
+        description: "Number of active users with role"
+
+# Failed access attempts
+upss_failed_access:
+  query: "SELECT COUNT(*) as count FROM upss.audit_logs WHERE event_type = 'access_denied' AND timestamp > NOW() - INTERVAL '1 hour'"
+  master: true
+  metrics:
+    - count:
+        usage: "COUNTER"
+        description: "Failed access attempts in last hour"
+
+# Integrity failures
+upss_integrity_failures:
+  query: "SELECT COUNT(*) as count FROM upss.audit_logs WHERE event_type = 'integrity_failure' AND timestamp > NOW() - INTERVAL '24 hours'"
+  master: true
+  metrics:
+    - count:
+        usage: "COUNTER"
+        description: "Integrity failures in last 24 hours"
+
+# Injection attempts
+upss_injection_attempts:
+  query: "SELECT COUNT(*) as count FROM upss.audit_logs WHERE event_type = 'injection_attempt' AND timestamp > NOW() - INTERVAL '24 hours'"
+  master: true
+  metrics:
+    - count:
+        usage: "COUNTER"
+        description: "Injection attempts in last 24 hours"
+
+# Table sizes
+upss_table_sizes:
+  query: "SELECT tablename, pg_total_relation_size(schemaname||'.'||tablename) AS bytes FROM pg_tables WHERE schemaname = 'upss'"
+  master: true
+  metrics:
+    - tablename:
+        usage: "LABEL"
+        description: "Table name"
+    - bytes:
+        usage: "GAUGE"
+        description: "Table size in bytes"

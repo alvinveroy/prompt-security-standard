@@ -1,0 +1,84 @@
+# Production-Grade PostgreSQL Dockerfile for UPSS
+# Multi-stage build for optimized image size and security
+
+# Stage 1: Builder
+FROM postgres:16-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache \
+    build-base \
+    postgresql-dev \
+    && rm -rf /var/cache/apk/*
+
+# Stage 2: Production
+FROM postgres:16-alpine
+
+LABEL maintainer="UPSS Contributors <security@upss-standard.org>"
+LABEL org.opencontainers.image.title="UPSS PostgreSQL Backend"
+LABEL org.opencontainers.image.description="Production-grade PostgreSQL database for UPSS prompt management"
+LABEL org.opencontainers.image.version="16.0-upss2.0"
+LABEL org.opencontainers.image.vendor="UPSS Project"
+LABEL org.opencontainers.image.licenses="MIT"
+
+# Install runtime dependencies and security tools
+RUN apk add --no-cache \
+    curl \
+    tzdata \
+    ca-certificates \
+    && rm -rf /var/cache/apk/*
+
+# Create app user for non-root operations
+RUN addgroup -g 1001 upss && \
+    adduser -D -u 1001 -G upss upss
+
+# Set environment variables for PostgreSQL
+ENV POSTGRES_DB=upss \
+    POSTGRES_USER=upss \
+    POSTGRES_PASSWORD=changeme \
+    PGDATA=/var/lib/postgresql/data/pgdata \
+    TZ=UTC
+
+# Create required directories with proper permissions
+RUN mkdir -p /var/lib/postgresql/data/pgdata \
+             /docker-entrypoint-initdb.d \
+             /etc/postgresql/conf.d \
+             /var/log/postgresql \
+             /backups && \
+    chown -R postgres:postgres /var/lib/postgresql \
+                                /docker-entrypoint-initdb.d \
+                                /etc/postgresql \
+                                /var/log/postgresql \
+                                /backups
+
+# Copy initialization scripts
+COPY --chown=postgres:postgres ./docker/postgres/init/ /docker-entrypoint-initdb.d/
+COPY --chown=postgres:postgres ./docker/postgres/config/ /etc/postgresql/conf.d/
+
+# Copy health check script
+COPY --chown=postgres:postgres ./docker/postgres/healthcheck.sh /usr/local/bin/healthcheck.sh
+RUN chmod +x /usr/local/bin/healthcheck.sh
+
+# Copy backup script
+COPY --chown=postgres:postgres ./docker/postgres/backup.sh /usr/local/bin/backup.sh
+RUN chmod +x /usr/local/bin/backup.sh
+
+# Security hardening
+RUN chmod 700 /var/lib/postgresql/data && \
+    chmod 755 /var/log/postgresql && \
+    chmod 755 /backups
+
+# Expose PostgreSQL port
+EXPOSE 5432
+
+# Configure health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD ["/usr/local/bin/healthcheck.sh"]
+
+# Volume for data persistence
+VOLUME ["/var/lib/postgresql/data", "/backups"]
+
+# Use postgres user for security
+USER postgres
+
+# Default command
+CMD ["postgres", "-c", "config_file=/etc/postgresql/conf.d/postgresql.conf"]

@@ -1,0 +1,140 @@
+# Docker Compose for UPSS PostgreSQL Development
+# Includes PostgreSQL, pgAdmin, and monitoring tools
+
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.postgres
+    container_name: upss-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-upss}
+      POSTGRES_USER: ${POSTGRES_USER:-upss}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /var/lib/postgresql/data/pgdata
+      TZ: UTC
+      # Backup settings
+      BACKUP_DIR: /backups
+      RETENTION_DAYS: 7
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_backups:/backups
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+      - ./docker/postgres/config:/etc/postgresql/conf.d:ro
+    networks:
+      - upss-network
+    healthcheck:
+      test: ["CMD-SHELL", "/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      com.upss.service: "postgresql"
+      com.upss.version: "16.0-upss2.0"
+
+  # pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: upss-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@upss.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro
+    networks:
+      - upss-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    labels:
+      com.upss.service: "pgadmin"
+
+  # PostgreSQL Exporter for Prometheus
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: upss-postgres-exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER:-upss}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-upss}?sslmode=disable"
+      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
+    ports:
+      - "${POSTGRES_EXPORTER_PORT:-9187}:9187"
+    volumes:
+      - ./docker/postgres/exporter/queries.yaml:/etc/postgres_exporter/queries.yaml:ro
+    networks:
+      - upss-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    labels:
+      com.upss.service: "postgres-exporter"
+
+  # Automated backup service
+  backup:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.postgres
+    container_name: upss-backup
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Backup service started. Running daily backups at 2 AM UTC..."
+        while true; do
+          # Wait until 2 AM UTC
+          sleep $$(( (86400 + $$(date -d "tomorrow 02:00" +%s) - $$(date +%s)) % 86400 ))
+          
+          echo "$$(date): Running full backup..."
+          /usr/local/bin/backup.sh full
+          
+          echo "$$(date): Running schema backup..."
+          /usr/local/bin/backup.sh schema
+          
+          # Verify latest backup
+          LATEST=$$(ls -t /backups/full/upss_backup_*.sql.gz | head -1)
+          /usr/local/bin/backup.sh verify "$$LATEST"
+        done
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-upss}
+      POSTGRES_USER: ${POSTGRES_USER:-upss}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      BACKUP_DIR: /backups
+      RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-7}
+    volumes:
+      - postgres_backups:/backups
+    networks:
+      - upss-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    labels:
+      com.upss.service: "backup"
+
+networks:
+  upss-network:
+    driver: bridge
+    name: upss-network
+
+volumes:
+  postgres_data:
+    name: upss-postgres-data
+    driver: local
+  postgres_backups:
+    name: upss-postgres-backups
+    driver: local
+  pgadmin_data:
+    name: upss-pgadmin-data
+    driver: local

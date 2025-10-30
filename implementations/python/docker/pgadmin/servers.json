@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "UPSS PostgreSQL",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "upss",
+      "Username": "upss",
+      "SSLMode": "prefer",
+      "PassFile": "/tmp/pgpassfile",
+      "Comment": "UPSS Production Database"
+    }
+  }
+}
