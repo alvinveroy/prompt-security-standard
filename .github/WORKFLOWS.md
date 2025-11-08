@@ -308,7 +308,7 @@ git tag -a python-v2.1.0 -m "Release Python UPSS v2.1.0"
 git push origin python-v2.1.0
 
 # Monitor workflow
-# Visit: https://github.com/alvinveroy/prompt-security-standard/actions
+# Visit: https://github.com/upss-standard/universal-prompt-security-standard/actions
 ```
 
 #### Pre-release
@@ -326,7 +326,7 @@ git push origin python-v2.1.0-beta.1
 After workflow completes:
 
 1. **PyPI**: https://pypi.org/project/upss/
-2. **GitHub Releases**: https://github.com/alvinveroy/prompt-security-standard/releases
+2. **GitHub Releases**: https://github.com/upss-standard/universal-prompt-security-standard/releases
 3. **Test Installation**:
    ```bash
    pip install upss==X.Y.Z

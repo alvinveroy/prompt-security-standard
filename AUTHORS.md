@@ -79,7 +79,7 @@ If you use UPSS in your work, please cite:
   year={2025},
   version={1.0.0},
   doi={10.5281/zenodo.17472647},
-  url={https://github.com/alvinveroy/prompt-security-standard},
+  url={https://github.com/upss-standard/universal-prompt-security-standard},
   note={Draft Proposal}
 }
 ```
@@ -90,7 +90,7 @@ Or use the citation information from [CITATION.cff](CITATION.cff) for automatic 
 
 For questions about authorship or contributions:
 - Email: security@upss-standard.org
-- GitHub Discussions: [github.com/alvinveroy/prompt-security-standard/discussions](https://github.com/alvinveroy/prompt-security-standard/discussions)
+- GitHub Discussions: [github.com/upss-standard/universal-prompt-security-standard/discussions](https://github.com/upss-standard/universal-prompt-security-standard/discussions)
 
 ---
 

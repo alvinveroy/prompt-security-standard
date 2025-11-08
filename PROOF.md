@@ -46,7 +46,7 @@ This work is licensed under the MIT License. See [LICENSE](LICENSE) file for det
   month={10},
   version={1.0.0},
   doi={10.5281/zenodo.17472647},
-  url={https://github.com/alvinveroy/prompt-security-standard},
+  url={https://github.com/upss-standard/universal-prompt-security-standard},
   publisher={Zenodo},
   note={Draft Proposal}
 }
@@ -92,7 +92,7 @@ author:
   email: alvin@alvin.tech
 license: MIT
 doi: 10.5281/zenodo.17472647
-repository: https://github.com/alvinveroy/prompt-security-standard
+repository: https://github.com/upss-standard/universal-prompt-security-standard
 category: Computer Science - Cryptography and Security (cs.CR)
 keywords:
   - AI security
@@ -124,7 +124,7 @@ This work is committed to long-term preservation through:
 For verification or authenticity questions:
 - **Email**: alvin@alvin.tech
 - **ORCID**: [0009-0001-0637-1954](https://orcid.org/0009-0001-0637-1954)
-- **GitHub Issues**: [github.com/alvinveroy/prompt-security-standard/issues](https://github.com/alvinveroy/prompt-security-standard/issues)
+- **GitHub Issues**: [github.com/upss-standard/universal-prompt-security-standard/issues](https://github.com/upss-standard/universal-prompt-security-standard/issues)
 
 ## Acknowledgments
 

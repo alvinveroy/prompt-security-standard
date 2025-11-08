@@ -44,7 +44,7 @@ cd prompt-security-standard
 3. Add upstream remote:
 
 ```bash
-git remote add upstream https://github.com/alvinveroy/prompt-security-standard.git
+git remote add upstream https://github.com/upss-standard/universal-prompt-security-standard.git
 ```
 
 4. Create a feature branch:

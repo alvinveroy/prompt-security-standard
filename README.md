@@ -588,8 +588,8 @@ See [LICENSE](LICENSE) file for full terms.
 
 ### Official Channels
 
-- **GitHub Issues:** [Report issues or request features](https://github.com/alvinveroy/prompt-security-standard/issues)
-- **GitHub Discussions:** [Join community discussions](https://github.com/alvinveroy/prompt-security-standard/discussions)
+- **GitHub Issues:** [Report issues or request features](https://github.com/upss-standard/universal-prompt-security-standard/issues)
+- **GitHub Discussions:** [Join community discussions](https://github.com/upss-standard/universal-prompt-security-standard/discussions)
 
 ### Security Vulnerabilities
 
@@ -660,8 +660,8 @@ Veroy, A. T. (2025). Universal Prompt Security Standard (UPSS): A Composable Sec
   month = {11},
   version = {1.1.0},
   doi = {10.5281/zenodo.17472647},
-  url = {https://github.com/alvinveroy/prompt-security-standard},
-  howpublished = {\url{https://github.com/alvinveroy/prompt-security-standard}},
+  url = {https://github.com/upss-standard/universal-prompt-security-standard},
+  howpublished = {\url{https://github.com/upss-standard/universal-prompt-security-standard}},
   note = {Open standard for securing LLM prompts in production systems}
 }
 ```

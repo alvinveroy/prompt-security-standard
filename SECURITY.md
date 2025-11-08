@@ -23,7 +23,7 @@ We take security vulnerabilities seriously and appreciate responsible disclosure
 
 Instead, please report security vulnerabilities through:
 
-**GitHub Security Advisories:** https://github.com/alvinveroy/prompt-security-standard/security/advisories
+**GitHub Security Advisories:** https://github.com/upss-standard/universal-prompt-security-standard/security/advisories
 
 This is the preferred and most secure method for reporting vulnerabilities.
 
@@ -129,8 +129,8 @@ We will coordinate with the reporter before making any early disclosure.
 
 Security advisories are published at:
 
-- **GitHub Security Advisories:** https://github.com/alvinveroy/prompt-security-standard/security/advisories
-- **GitHub Releases:** https://github.com/alvinveroy/prompt-security-standard/releases
+- **GitHub Security Advisories:** https://github.com/upss-standard/universal-prompt-security-standard/security/advisories
+- **GitHub Releases:** https://github.com/upss-standard/universal-prompt-security-standard/releases
 
 ### Advisory Format
 
@@ -271,7 +271,7 @@ The UPSS Security Team is responsible for:
 
 ### Contact Information
 
-- **GitHub Security Advisories:** https://github.com/alvinveroy/prompt-security-standard/security/advisories
+- **GitHub Security Advisories:** https://github.com/upss-standard/universal-prompt-security-standard/security/advisories
 - **GitHub Issues:** For non-sensitive security questions
 
 ## Legal

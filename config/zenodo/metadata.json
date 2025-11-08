@@ -34,12 +34,12 @@
         "description": "First public release of Universal Prompt Security Standard (UPSS) v1.0.0 Draft."
       }
     ],
-    "repository_url": "https://github.com/alvinveroy/prompt-security-standard",
+    "repository_url": "https://github.com/upss-standard/universal-prompt-security-standard",
     "programming_language": ["Python", "JavaScript"],
     "development_status": "Active",
     "related_identifiers": [
       {
-        "identifier": "https://github.com/alvinveroy/prompt-security-standard",
+        "identifier": "https://github.com/upss-standard/universal-prompt-security-standard",
         "relation": "isSupplementTo",
         "scheme": "url"
       }

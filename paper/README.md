@@ -98,8 +98,8 @@ This manuscript is submitted under arXiv's non-exclusive license to distribute, 
 ## Contact
 
 For questions about this manuscript:
-- GitHub: https://github.com/alvinveroy/prompt-security-standard
-- Issues: https://github.com/alvinveroy/prompt-security-standard/issues
+- GitHub: https://github.com/upss-standard/universal-prompt-security-standard
+- Issues: https://github.com/upss-standard/universal-prompt-security-standard/issues
 
 ## Revision History
 

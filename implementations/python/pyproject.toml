@@ -44,10 +44,10 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/alvinveroy/prompt-security-standard"
-Documentation = "https://github.com/alvinveroy/prompt-security-standard/tree/main/implementations/python"
-Repository = "https://github.com/alvinveroy/prompt-security-standard"
-Issues = "https://github.com/alvinveroy/prompt-security-standard/issues"
+Homepage = "https://github.com/upss-standard/universal-prompt-security-standard"
+Documentation = "https://github.com/upss-standard/universal-prompt-security-standard/tree/main/implementations/python"
+Repository = "https://github.com/upss-standard/universal-prompt-security-standard"
+Issues = "https://github.com/upss-standard/universal-prompt-security-standard/issues"
 
 [project.scripts]
 upss = "upss.cli.main:cli"

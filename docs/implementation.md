@@ -1068,5 +1068,5 @@ After completing implementation:
 ## Support
 
 For implementation support:
-- GitHub Discussions: https://github.com/alvinveroy/prompt-security-standard/discussions
+- GitHub Discussions: https://github.com/upss-standard/universal-prompt-security-standard/discussions
 - Email: support@upss-standard.org
