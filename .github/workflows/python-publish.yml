@@ -143,7 +143,9 @@ jobs:
             git commit -m "chore(python): bump version to ${VERSION} [skip ci]"
             
             # Create a release branch and push to it
-            RELEASE_BRANCH="release/python-v${VERSION}"
+            # Remove 'v' prefix if present to avoid double 'v' in branch name
+            CLEAN_VERSION="${VERSION#v}"
+            RELEASE_BRANCH="release/python-v${CLEAN_VERSION}"
             git checkout -b "${RELEASE_BRANCH}"
             
             if git push origin "${RELEASE_BRANCH}"; then
