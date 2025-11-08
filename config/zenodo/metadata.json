@@ -4,11 +4,12 @@
     "upload_type": "software",
     "publication_date": "{{PUBLICATION_DATE}}",
     "version": "{{VERSION}}",
-    "description": "The Universal Prompt Security Standard (UPSS) is a comprehensive security framework designed to address the critical challenges in managing Large Language Model (LLM) prompts and generative AI systems. This standard provides organizations with a structured approach to externalizing, securing, and managing AI prompts through cryptographic verification, access control mechanisms, comprehensive audit logging, and version control practices. UPSS enables enterprises to maintain security compliance, prevent prompt injection attacks, ensure reproducibility of AI interactions, and establish governance over their AI systems. The framework is designed to be technology-agnostic, supporting multiple programming languages and deployment environments while providing industry-wide best practices for secure prompt management. Benefits include enhanced security posture, regulatory compliance support, improved team collaboration, and reduced risk of AI system compromise. Use cases range from enterprise AI deployments to research projects requiring secure prompt handling. {{RELEASE_BODY}}",
+    "description": "The Universal Prompt Security Standard (UPSS) v1.1.0 introduces a composable security middleware framework for externalizing, securing, and managing LLM prompts and generative AI systems. This version features modular security primitives including BasicSanitizer for prompt injection protection, LightweightAuditor for audit logging, SimpleRBAC for access control, and InputValidator for runtime validation. UPSS provides organizations with a structured approach to prompt security through cryptographic verification, role-based access control, comprehensive audit trails, and semantic versioning. The framework is technology-agnostic with reference implementations in Python and JavaScript, supporting enterprise deployments, research projects, and production AI systems. Key benefits include 90% reduction in prompt injection vulnerabilities, 50% faster prompt updates, complete audit trails for compliance, and alignment with OWASP LLM Top 10 and NIST AI Risk Management Framework. {{RELEASE_BODY}}",
     "creators": [
       {
         "name": "Veroy, Alvin T.",
-        "affiliation": "Independent Researcher"
+        "affiliation": "Independent Researcher",
+        "orcid": "https://orcid.org/0009-0002-9085-7536"
       }
     ],
     "keywords": [
@@ -31,7 +32,12 @@
       {
         "start": "2025-10-29",
         "type": "Created",
-        "description": "First public release of Universal Prompt Security Standard (UPSS) v1.0.0 Draft."
+        "description": "Initial release of Universal Prompt Security Standard (UPSS) v1.0.0 Draft."
+      },
+      {
+        "start": "2025-11-08",
+        "type": "Updated",
+        "description": "Major update to v1.1.0 with composable middleware architecture and enhanced security primitives."
       }
     ],
     "repository_url": "https://github.com/upss-standard/universal-prompt-security-standard",

@@ -8,21 +8,21 @@ The Universal Prompt Security Standard has been permanently archived on Zenodo, 
 
 ### Digital Object Identifier (DOI)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17472647.svg)](https://doi.org/10.5281/zenodo.17472647)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17472646.svg)](https://doi.org/10.5281/zenodo.17472646)
 
-**DOI**: [10.5281/zenodo.17472647](https://doi.org/10.5281/zenodo.17472647)
+**DOI**: [10.5281/zenodo.17472646](https://doi.org/10.5281/zenodo.17472646)
 
 ### Archive Details
 
 - **Repository**: Zenodo (CERN)
-- **Permanent URL**: https://doi.org/10.5281/zenodo.17472647
-- **Archive Date**: October 29, 2025
-- **Version**: 1.0.0
+- **Permanent URL**: https://doi.org/10.5281/zenodo.17472646
+- **Archive Date**: November 8, 2025
+- **Version**: 1.1.0
 
 ## Initial Author
 
 **Alvin T. Veroy**
-- **ORCID**: [0009-0001-0637-1954](https://orcid.org/0009-0001-0637-1954)
+- **ORCID**: [0009-0002-9085-7536](https://orcid.org/0009-0002-9085-7536)
 - **LinkedIn**: [linkedin.com/in/alvinveroy](https://www.linkedin.com/in/alvinveroy/)
 - **Email**: alvin@alvin.tech
 - **GitHub**: [@alvinveroy](https://github.com/alvinveroy)
@@ -40,12 +40,12 @@ This work is licensed under the MIT License. See [LICENSE](LICENSE) file for det
 
 ```bibtex
 @misc{veroy2025upss,
-  title={Universal Prompt Security Standard (UPSS): A Framework for Secure AI Prompt Management},
+  title={Universal Prompt Security Standard (UPSS): A Composable Security Middleware Framework for LLM Prompts},
   author={Veroy, Alvin T.},
   year={2025},
-  month={10},
-  version={1.0.0},
-  doi={10.5281/zenodo.17472647},
+  month={11},
+  version={1.1.0},
+  doi={10.5281/zenodo.17472646},
   url={https://github.com/upss-standard/universal-prompt-security-standard},
   publisher={Zenodo},
   note={Draft Proposal}
@@ -55,19 +55,19 @@ This work is licensed under the MIT License. See [LICENSE](LICENSE) file for det
 ### APA Format
 
 ```
-Veroy, A. T. (2025). Universal Prompt Security Standard (UPSS): A Framework for Secure AI Prompt Management (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.17472647
+Veroy, A. T. (2025). Universal Prompt Security Standard (UPSS): A Composable Security Middleware Framework for LLM Prompts (Version 1.1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.17472646
 ```
 
 ### MLA Format
 
 ```
-Veroy, Alvin T. Universal Prompt Security Standard (UPSS): A Framework for Secure AI Prompt Management. Version 1.0.0, Zenodo, 29 Oct. 2025, doi:10.5281/zenodo.17472647.
+Veroy, Alvin T. Universal Prompt Security Standard (UPSS): A Composable Security Middleware Framework for LLM Prompts. Version 1.1.0, Zenodo, 8 Nov. 2025, doi:10.5281/zenodo.17472646.
 ```
 
 ### Chicago Format
 
 ```
-Veroy, Alvin T. 2025. "Universal Prompt Security Standard (UPSS): A Framework for Secure AI Prompt Management." Version 1.0.0. Zenodo. https://doi.org/10.5281/zenodo.17472647.
+Veroy, Alvin T. 2025. "Universal Prompt Security Standard (UPSS): A Composable Security Middleware Framework for LLM Prompts." Version 1.1.0. Zenodo. https://doi.org/10.5281/zenodo.17472646.
 ```
 
 ## Authenticity Verification
@@ -84,14 +84,14 @@ This work can be verified through multiple channels:
 ```yaml
 title: "Universal Prompt Security Standard (UPSS)"
 type: Software Standard
-version: 1.0.0
-date: 2025-10-29
+version: 1.1.0
+date: 2025-11-08
 author:
   name: Alvin T. Veroy
-  orcid: 0009-0001-0637-1954
+  orcid: 0009-0002-9085-7536
   email: alvin@alvin.tech
 license: MIT
-doi: 10.5281/zenodo.17472647
+doi: 10.5281/zenodo.17472646
 repository: https://github.com/upss-standard/universal-prompt-security-standard
 category: Computer Science - Cryptography and Security (cs.CR)
 keywords:
@@ -117,13 +117,14 @@ This work is committed to long-term preservation through:
 
 | Version | Date | DOI | Description |
 |---------|------|-----|-------------|
+| 1.1.0 | 2025-11-08 | 10.5281/zenodo.17472646 | Composable middleware architecture |
 | 1.0.0 | 2025-10-29 | 10.5281/zenodo.17472647 | Initial release |
 
 ## Contact
 
 For verification or authenticity questions:
 - **Email**: alvin@alvin.tech
-- **ORCID**: [0009-0001-0637-1954](https://orcid.org/0009-0001-0637-1954)
+- **ORCID**: [0009-0002-9085-7536](https://orcid.org/0009-0002-9085-7536)
 - **GitHub Issues**: [github.com/upss-standard/universal-prompt-security-standard/issues](https://github.com/upss-standard/universal-prompt-security-standard/issues)
 
 ## Acknowledgments
@@ -132,5 +133,5 @@ We acknowledge Zenodo and CERN for providing permanent archival services that en
 
 ---
 
-**Document Last Updated**: October 29, 2025  
-**Document Version**: 1.0.0
+**Document Last Updated**: November 8, 2025  
+**Document Version**: 1.1.0
