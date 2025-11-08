@@ -21,11 +21,11 @@ We take security vulnerabilities seriously and appreciate responsible disclosure
 
 **DO NOT** report security vulnerabilities through public GitHub issues, discussions, or any other public forum.
 
-Instead, please report security vulnerabilities to:
+Instead, please report security vulnerabilities through:
 
-**Email:** security@upss-standard.org
+**GitHub Security Advisories:** https://github.com/alvinveroy/prompt-security-standard/security/advisories
 
-**PGP Key:** Available at https://upss-standard.org/pgp-key.asc
+This is the preferred and most secure method for reporting vulnerabilities.
 
 ### What to Include
 
@@ -130,8 +130,7 @@ We will coordinate with the reporter before making any early disclosure.
 Security advisories are published at:
 
 - **GitHub Security Advisories:** https://github.com/alvinveroy/prompt-security-standard/security/advisories
-- **Website:** https://upss-standard.org/security/advisories
-- **Mailing List:** security-announce@upss-standard.org
+- **GitHub Releases:** https://github.com/alvinveroy/prompt-security-standard/releases
 
 ### Advisory Format
 
@@ -233,10 +232,8 @@ We recognize individuals and organizations that contribute to UPSS security:
 
 Subscribe to security updates:
 
-- **Mailing List:** security-announce@upss-standard.org
-- **GitHub Watch:** Enable security alerts on the repository
-- **RSS Feed:** https://upss-standard.org/security/feed.xml
-- **Twitter:** @UPSSStandard
+- **GitHub Watch:** Enable security alerts and notifications on the repository
+- **GitHub Releases:** Subscribe to release notifications
 
 ### Update Policy
 
@@ -258,8 +255,7 @@ UPSS aligns with the following security standards:
 
 We are planning to launch a bug bounty program in Q2 2026. Details will be announced on:
 
-- https://upss-standard.org/security/bug-bounty
-- security-announce@upss-standard.org
+- GitHub Security Advisories for vulnerability reports
 
 ## Security Governance
 
@@ -275,9 +271,8 @@ The UPSS Security Team is responsible for:
 
 ### Contact Information
 
-- **Email:** security@upss-standard.org
-- **PGP Key:** https://upss-standard.org/pgp-key.asc
-- **GitHub:** @upss-security-team
+- **GitHub Security Advisories:** https://github.com/alvinveroy/prompt-security-standard/security/advisories
+- **GitHub Issues:** For non-sensitive security questions
 
 ## Legal
 
@@ -308,10 +303,10 @@ Safe harbor does not apply to:
 
 ## Questions
 
-For questions about this security policy, contact:
+For questions about this security policy:
 
-- **Email:** security@upss-standard.org
-- **GitHub:** Open an issue labeled "security-question"
+- **GitHub Issues:** Open an issue labeled "security-question"
+- **GitHub Discussions:** Start a discussion in the security category
 
 ## Acknowledgments
 
