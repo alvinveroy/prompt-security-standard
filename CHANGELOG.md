@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2025-11-08
+
+### Release Notes
+## What's Changed
+* feat(repo): update all repository references to new organization by @alvinveroy in https://github.com/upss-standard/universal-prompt-security-standard/pull/24
+
+
+**Full Changelog**: https://github.com/upss-standard/universal-prompt-security-standard/compare/v1.1.0...v1.1.1
 ## [1.1.0] - 2025-11-08
 
 ### Added
@@ -62,3 +70,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial draft of the Universal Prompt Security Standard (UPSS)
 
 [1.0.1]: https://github.com/upss-standard/universal-prompt-security-standard/releases/tag/v1.0.1
+
+[1.1.1]: https://github.com/upss-standard/universal-prompt-security-standard/releases/tag/v1.1.1
