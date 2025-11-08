@@ -18,7 +18,7 @@ Thank you for your interest in contributing to UPSS! This document provides guid
 
 ## Code of Conduct
 
-This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to conduct@upss-standard.org.
+This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior through GitHub Issues or contact the maintainer directly.
 
 ## Getting Started
 
@@ -590,8 +590,6 @@ Screenshots, logs, or other relevant information
 
 - **GitHub Issues:** Bug reports and feature requests
 - **GitHub Discussions:** General discussions and questions
-- **Slack:** Real-time community chat
-- **Monthly Calls:** Community sync meetings
 
 ### Best Practices
 
@@ -619,9 +617,8 @@ Screenshots, logs, or other relevant information
 
 We recognize contributors through:
 - Contributors listed in CHANGELOG.md
-- Annual contributor spotlight
-- Speaker opportunities at community events
-- Swag for significant contributions
+- Acknowledgment in release notes
+- Credit in documentation and examples
 
 ## Getting Help
 

@@ -45,9 +45,11 @@ This Code of Conduct also applies to actions taken outside of these spaces when 
 
 ### Reporting
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at:
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainer through:
 
-**conduct@upss-standard.org**
+- **GitHub Issues:** Create a confidential issue
+- **GitHub Discussions:** Private message to maintainers
+- **Direct Contact:** Through GitHub profile
 
 All complaints will be reviewed and investigated promptly and fairly.
 
@@ -87,7 +89,7 @@ Community leaders will follow these Community Impact Guidelines in determining t
 
 ## Appeal Process
 
-If you believe you have been falsely or unfairly accused of violating this Code of Conduct, you should notify conduct@upss-standard.org with a concise description of your grievance. Your grievance will be handled in accordance with our community policies.
+If you believe you have been falsely or unfairly accused of violating this Code of Conduct, you should notify the project maintainer through GitHub with a concise description of your grievance. Your grievance will be handled in accordance with our community policies.
 
 Appeals will be reviewed by a different member of the community leadership team than the one who made the original enforcement decision, when possible.
 
@@ -139,8 +141,8 @@ This Code of Conduct applies to all UPSS community spaces, including:
 
 For questions or concerns about the Code of Conduct:
 
-- **Email:** conduct@upss-standard.org
-- **GitHub:** Open an issue labeled "code-of-conduct"
+- **GitHub Issues:** Open an issue labeled "code-of-conduct"
+- **GitHub Discussions:** Start a discussion in the community section
 
 ## Acknowledgments
 

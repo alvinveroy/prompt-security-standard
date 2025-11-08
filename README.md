@@ -4,9 +4,9 @@
 
 # Universal Prompt Security Standard (UPSS)
 
-**Version:** 1.0.1
+**Version:** 1.1.0  
 **Status:** Draft Proposal  
-**Last Updated:** October 29, 2025
+**Last Updated:** November 8, 2025
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17472647.svg)](https://doi.org/10.5281/zenodo.17472647)
 
@@ -39,12 +39,37 @@ The Universal Prompt Security Standard (UPSS) provides a comprehensive framework
 
 UPSS addresses the critical need for secure prompt management in AI systems by providing:
 
+- **Modular Security Architecture:** Composable middleware for pluggable security primitives (v1.1.0)
 - **Security Framework:** Comprehensive security controls for prompt protection
 - **Configuration Management:** Externalized prompt configuration separate from code
 - **Audit Trail:** Complete traceability of prompt usage and modifications
 - **Version Control:** Semantic versioning with rollback capabilities
 - **Compliance Support:** Alignment with industry standards and regulations
 - **Implementation Guidance:** Step-by-step guides and reference examples
+
+### What's New in v1.1.0
+
+**Modular Middleware Architecture** - A new composable security framework that allows you to pick and choose security features based on your needs:
+
+```python
+from upss import SecurityPipeline, BasicSanitizer, LightweightAuditor
+
+# Create a pipeline with the security features you need
+pipeline = SecurityPipeline()
+pipeline.use(BasicSanitizer())      # Block prompt injection attacks
+pipeline.use(LightweightAuditor())  # Track all prompt usage
+
+# Process prompts through your security pipeline
+result = await pipeline.execute(user_prompt, context)
+```
+
+**Essential Security Primitives:**
+- `BasicSanitizer` - Blocks 90% of prompt injection attacks
+- `LightweightAuditor` - File-based audit logging (no complex infrastructure)
+- `SimpleRBAC` - Role-based access control
+- `InputValidator` - Runtime input validation
+
+See [MIDDLEWARE.md](implementations/python/MIDDLEWARE.md) for complete documentation.
 
 ### Scope
 
@@ -334,6 +359,16 @@ If you encounter:
 **UPSS-VC-04:** Document all prompt changes with business justification  
 **UPSS-VC-05:** Implement automated testing for prompt functionality validation
 
+#### Runtime Security (RS)
+
+**UPSS-RS-01:** All prompts must be validated at runtime against a configurable set of forbidden patterns before being executed by any LLM  
+**UPSS-RS-02:** Implement input sanitization to detect and block prompt injection attempts  
+**UPSS-RS-03:** Enforce maximum prompt length limits to prevent resource exhaustion attacks  
+**UPSS-RS-04:** Validate prompt encoding and character sets to prevent bypass techniques  
+**UPSS-RS-05:** Implement rate limiting for prompt execution to prevent abuse
+
+**Implementation Note:** The v1.1.0 middleware architecture provides `BasicSanitizer`, `InputValidator`, and other primitives that implement these runtime security controls. See [MIDDLEWARE.md](implementations/python/MIDDLEWARE.md) for details.
+
 ### Recommended Controls
 
 #### Advanced Threat Protection (ATP)
@@ -504,25 +539,21 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ## Governance
 
-### Steering Committee
+UPSS is currently maintained by Alvin T. Veroy as an open standard for the community. The project welcomes contributions from developers, security professionals, researchers, and anyone interested in improving prompt security for AI systems.
 
-The UPSS Steering Committee provides strategic direction and oversees the standard's evolution.
+### Vision
 
-**Responsibilities:**
-- Approve major changes to the standard
-- Establish working groups for specific initiatives
-- Resolve disputes and conflicts
-- Ensure alignment with industry best practices
+This standard aims to make prompt security accessible and practical for:
+- Individual developers building AI-powered applications
+- Small teams integrating LLMs into their products
+- Startups establishing security practices from day one
+- Enterprises requiring comprehensive security frameworks
+- Researchers studying AI security and safety
+- Educators teaching responsible AI development
 
-### Working Groups
+The goal is to create a community-driven standard that evolves with the rapidly changing landscape of AI security, balancing robust protection with practical usability.
 
-Specialized groups focus on specific aspects:
-- **Security Working Group:** Security controls and threat modeling
-- **Implementation Working Group:** Reference implementations and tooling
-- **Compliance Working Group:** Regulatory alignment and certification
-- **Community Working Group:** Adoption, education, and outreach
-
-See [Governance Documentation](docs/governance.md) for complete structure.
+See [Governance Documentation](docs/governance.md) for contribution guidelines and decision-making processes.
 
 ## License
 
@@ -559,19 +590,12 @@ See [LICENSE](LICENSE) file for full terms.
 
 - **GitHub Issues:** [Report issues or request features](https://github.com/alvinveroy/prompt-security-standard/issues)
 - **GitHub Discussions:** [Join community discussions](https://github.com/alvinveroy/prompt-security-standard/discussions)
-- **Email:** security@upss-standard.org
 
 ### Security Vulnerabilities
 
-If you discover a security vulnerability in UPSS or related tools, please report it responsibly.
+If you discover a security vulnerability in UPSS or related tools, please report it responsibly through GitHub Security Advisories.
 
 See [SECURITY.md](SECURITY.md) for our vulnerability disclosure policy.
-
-### Community
-
-- **Monthly Community Calls:** First Tuesday of each month at 10:00 AM PT
-- **Slack Workspace:** [Join UPSS Community](https://upss-community.slack.com)
-- **Twitter:** [@UPSSStandard](https://twitter.com/UPSSStandard)
 
 ## Adoption and Recognition
 
@@ -587,26 +611,23 @@ By implementing UPSS, organizations contribute to establishing trust in artifici
 
 ## Roadmap
 
-### Current Version: 1.0.0 (Draft)
+### Version 1.1.0 (Current - Draft Proposal)
 
 - Core framework and principles
+- Modular middleware architecture for composable security
+- Essential security primitives (BasicSanitizer, LightweightAuditor, SimpleRBAC, InputValidator)
 - Mandatory and recommended security controls
 - Reference architecture and configuration format
-- Initial documentation and examples
+- Comprehensive documentation and examples
+- Python implementation with test suite
 
-### Planned: Version 1.1.0 (Q1 2026)
+### Future Enhancements (Community-Driven)
 
-- Certification program launch
-- Expanded language support (10+ languages)
-- Integration with popular AI frameworks
-- Automated compliance validation tools
-
-### Future: Version 2.0.0 (Q3 2026)
-
-- Advanced threat detection capabilities
-- Federated prompt management
-- Cross-organization collaboration features
-- AI-powered prompt security analysis
+- Additional security primitives (runtime policy engine, anomaly detection)
+- Zero-trust orchestration features
+- Framework integrations (FastAPI, Express, Flask)
+- Additional language implementations
+- Community-contributed security modules
 
 See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
@@ -617,30 +638,39 @@ UPSS builds upon the foundation established by:
 - OWASP Foundation and the LLM Top 10 project
 - NIST AI Risk Management Framework contributors
 - Security researchers and practitioners worldwide
-- Early adopters and pilot organizations
+- Open source community contributors
 
-Thank you to all contributors who have helped shape this standard.
+Thank you to all who contribute to making AI systems more secure.
 
 ## Citation
 
-If you reference UPSS in academic work or publications, please use:
+If you reference UPSS in academic work or publications, please cite:
 
+**APA Style:**
 ```
-Universal Prompt Security Standard (UPSS), Version 1.0.0. (2025).
-Retrieved from https://github.com/alvinveroy/prompt-security-standard
+Veroy, A. T. (2025). Universal Prompt Security Standard (UPSS): A Composable Security Middleware Framework for LLM Prompts (Version 1.1.0). https://doi.org/10.5281/zenodo.17472647
 ```
 
-BibTeX:
+**BibTeX:**
 ```bibtex
-@misc{upss2025,
-  title={Universal Prompt Security Standard (UPSS)},
-  author={UPSS Contributors},
-  year={2025},
-  version={1.0.0},
-  doi={10.5281/zenodo.17472647},
-  url={https://github.com/alvinveroy/prompt-security-standard},
-  note={Draft Proposal}
+@misc{veroy2025upss,
+  title = {Universal Prompt Security Standard (UPSS): A Composable Security Middleware Framework for LLM Prompts},
+  author = {Veroy, Alvin T.},
+  year = {2025},
+  month = {11},
+  version = {1.1.0},
+  doi = {10.5281/zenodo.17472647},
+  url = {https://github.com/alvinveroy/prompt-security-standard},
+  howpublished = {\url{https://github.com/alvinveroy/prompt-security-standard}},
+  note = {Open standard for securing LLM prompts in production systems}
 }
 ```
+
+**IEEE Style:**
+```
+A. T. Veroy, "Universal Prompt Security Standard (UPSS): A Composable Security Middleware Framework for LLM Prompts," Version 1.1.0, Nov. 2025. [Online]. Available: https://doi.org/10.5281/zenodo.17472647
+```
+
+**Author ORCID:** [0009-0002-9085-7536](https://orcid.org/0009-0002-9085-7536)
 
 This standard establishes the foundation for industry-wide prompt security practices. By adopting UPSS, organizations can significantly reduce their attack surface while improving operational efficiency and regulatory compliance.

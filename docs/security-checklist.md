@@ -116,6 +116,40 @@ Use this checklist to validate your UPSS implementation against security require
   - [ ] Integration tests implemented
   - [ ] Tests run in CI/CD pipeline
 
+### Runtime Security (RS)
+
+- [ ] **UPSS-RS-01:** Runtime validation against forbidden patterns
+  - [ ] Pattern-based validation implemented
+  - [ ] Configurable pattern list maintained
+  - [ ] Validation occurs before LLM execution
+  - [ ] Blocked patterns logged for analysis
+
+- [ ] **UPSS-RS-02:** Input sanitization for prompt injection prevention
+  - [ ] Injection detection patterns configured
+  - [ ] Suspicious content redacted or blocked
+  - [ ] Sanitization tested with known attack vectors
+  - [ ] False positive rate monitored
+
+- [ ] **UPSS-RS-03:** Maximum prompt length limits enforced
+  - [ ] Length limits defined per prompt category
+  - [ ] Limits enforced at runtime
+  - [ ] Oversized prompts rejected with clear error
+  - [ ] Length metrics tracked
+
+- [ ] **UPSS-RS-04:** Encoding and character set validation
+  - [ ] UTF-8 encoding validated
+  - [ ] Null bytes detected and rejected
+  - [ ] Control characters filtered
+  - [ ] Invalid encoding attempts logged
+
+- [ ] **UPSS-RS-05:** Rate limiting for prompt execution
+  - [ ] Rate limits defined per user/role
+  - [ ] Rate limiting enforced at runtime
+  - [ ] Exceeded limits result in temporary blocks
+  - [ ] Rate limit violations logged
+
+**Implementation Note:** The v1.1.0 middleware architecture (`BasicSanitizer`, `InputValidator`, etc.) provides reference implementations for these controls. See [MIDDLEWARE.md](../implementations/python/MIDDLEWARE.md).
+
 ### Supply Chain Security (SC)
 
 - [ ] **UPSS-SC-01:** Verify integrity of external libraries
