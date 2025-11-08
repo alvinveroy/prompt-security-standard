@@ -19,9 +19,9 @@ Advanced:
     - PatternMonitor: Suspicious activity tracking
 """
 
-from .sanitizer import BasicSanitizer
 from .auditor import LightweightAuditor
 from .rbac import SimpleRBAC
+from .sanitizer import BasicSanitizer
 from .validator import InputValidator
 
 __all__ = [

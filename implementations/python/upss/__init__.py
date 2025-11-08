@@ -26,11 +26,16 @@ from .core.exceptions import (
     UPSSError,
 )
 
+# v2.0 Middleware Architecture
+from .core.middleware import (
+    SecurityContext,
+    SecurityMiddleware,
+    SecurityPipeline,
+    SecurityResult,
+)
+
 # Core models
 from .core.models import AuditEntry, MigrationReport, PromptContent
-
-# v2.0 Middleware Architecture
-from .core.middleware import SecurityContext, SecurityMiddleware, SecurityPipeline, SecurityResult
 
 # Essential Security Primitives
 from .middleware import BasicSanitizer, InputValidator, LightweightAuditor, SimpleRBAC
