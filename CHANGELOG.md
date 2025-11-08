@@ -7,25 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-11-08
+
 ### Added
-- Python library implementation (v2.0.0) in `implementations/python/`
-  - Core UPSSClient with filesystem and PostgreSQL mode support
-  - Security features: sanitize(), render(), pattern detection, PII detection
-  - Integrity features: SHA-256 checksum verification, rollback support
-  - RBAC (Role-Based Access Control) for filesystem and PostgreSQL modes
-  - Audit logging with JSONL format
-  - Migration tools: discover, decorator-based migration
-  - CLI tool: `upss init`, `upss discover`, `upss migrate`
-  - Comprehensive test suite
-  - Full documentation and examples
-- Production-grade PostgreSQL Docker setup
-  - Multi-stage Dockerfile with security hardening
-  - Complete database schema with RLS, immutable audit logs
-  - Automated daily backups with WAL archiving
-  - Health checks and monitoring (Prometheus metrics)
-  - pgAdmin 4 for database management
-  - docker-compose.yml for easy deployment
-  - Comprehensive documentation and configuration
+- **Modular Middleware Architecture** - New composable security primitives
+  - `SecurityPipeline`: Composable middleware pipeline for security checks
+  - `SecurityContext`: Context information for security operations
+  - `SecurityResult`: Result of security processing with violations and risk scores
+  - `SecurityMiddleware`: Base class for creating custom security primitives
+  
+- **Essential Security Primitives**
+  - `BasicSanitizer`: Block common prompt injection patterns (ignore previous, role confusion, system injection)
+  - `LightweightAuditor`: File-based audit logging in JSONL format with query interface
+  - `SimpleRBAC`: Role-based access control with configurable role mappings
+  - `InputValidator`: Runtime input validation (null bytes, control chars, encoding, length limits)
+
+- **Documentation**
+  - `MIDDLEWARE.md`: Comprehensive guide for the new middleware architecture
+  - `basic_middleware_usage.py`: Example demonstrating middleware composition
+  - Complete test suite for all middleware components
+
+- **Python Implementation Updates**
+  - Updated `upss/__init__.py` to export middleware components
+  - Maintained backward compatibility with v1.0 `UPSSClient`
+  - Added fluent interface for pipeline composition
+
+### Changed
+- Version bumped to 1.1.0 (still in draft proposal phase)
+- Updated author attribution to Alvin T. Veroy
+- Enhanced package documentation with middleware examples
+
+### Technical Details
+- All middleware is async-first for high performance
+- Middleware executes sequentially and stops on first failure
+- Risk scores aggregate across middleware (0.0 = safe, 1.0 = maximum risk)
+- Audit logs use JSONL format for easy parsing and querying
+- Custom middleware can be created by extending `SecurityMiddleware`
+
+### Migration Notes
+- v1.0 `UPSSClient` remains fully supported
+- New middleware architecture is opt-in
+- Can be used alongside existing v1.0 code
+- See `MIDDLEWARE.md` for migration examples
 
 ## [1.0.1] - 2025-10-29
 
