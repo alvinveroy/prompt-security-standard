@@ -4,9 +4,9 @@
 
 # Universal Prompt Security Standard (UPSS)
 
-**Version:** 1.1.0  
+**Version:** 1.1.0
 **Status:** Draft Proposal  
-**Last Updated:** November 8, 2025
+**Last Updated:** November 08, 2025
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17472647.svg)](https://doi.org/10.5281/zenodo.17472647)
 

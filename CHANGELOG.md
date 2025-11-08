@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2025-11-08
 
+### Release Notes
+## [1.1.0] - 2025-11-08
+
 ### Added
 - **Modular Middleware Architecture** - New composable security primitives
   - `SecurityPipeline`: Composable middleware pipeline for security checks
@@ -62,3 +65,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial draft of the Universal Prompt Security Standard (UPSS)
 
 [1.0.1]: https://github.com/alvinveroy/prompt-security-standard/releases/tag/v1.0.1
+
+[1.1.0]: https://github.com/alvinveroy/prompt-security-standard/releases/tag/v1.1.0
