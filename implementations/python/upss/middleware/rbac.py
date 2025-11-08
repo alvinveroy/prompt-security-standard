@@ -4,7 +4,7 @@ Simple role-based access control middleware.
 This module provides basic RBAC without requiring complex infrastructure.
 """
 
-from typing import Dict, Set
+from typing import Dict, Optional, Set
 
 from ..core.middleware import SecurityContext, SecurityMiddleware, SecurityResult
 
@@ -47,7 +47,7 @@ class SimpleRBAC(SecurityMiddleware):
         "user": {"user"},
     }
 
-    def __init__(self, roles_config: Dict[str, Set[str]] = None):
+    def __init__(self, roles_config: Optional[Dict[str, Set[str]]] = None):
         """
         Initialize RBAC middleware.
 
@@ -68,8 +68,9 @@ class SimpleRBAC(SecurityMiddleware):
             SecurityResult indicating whether access is allowed
         """
         # Get role and category from context metadata
-        user_role = context.metadata.get("role", "user")
-        prompt_category = context.metadata.get("category", "user")
+        metadata = context.metadata or {}
+        user_role = metadata.get("role", "user")
+        prompt_category = metadata.get("category", "user")
 
         # Get allowed categories for this role
         allowed_categories = self.roles.get(user_role, set())

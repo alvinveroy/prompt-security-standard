@@ -6,7 +6,7 @@ injection patterns with minimal overhead.
 """
 
 import re
-from typing import List, Pattern
+from typing import List, Optional, Pattern
 
 from ..core.middleware import SecurityContext, SecurityMiddleware, SecurityResult
 
@@ -64,7 +64,7 @@ class BasicSanitizer(SecurityMiddleware):
         r"root\s+access",
     ]
 
-    def __init__(self, block_patterns: List[str] = None):
+    def __init__(self, block_patterns: Optional[List[str]] = None):
         """
         Initialize the sanitizer.
 

@@ -152,7 +152,7 @@ class LightweightAuditor(SecurityMiddleware):
         if not self.log_path.exists():
             return []
 
-        results = []
+        results: list = []
 
         with open(self.log_path, "r", encoding="utf-8") as f:
             for line in f:

@@ -29,7 +29,7 @@ class SecurityContext:
     environment: str = "production"
     metadata: Optional[Dict[str, Any]] = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if self.metadata is None:
             self.metadata = {}
 
@@ -61,7 +61,7 @@ class SecurityResult:
     violations: List[str]
     metadata: Dict[str, Any]
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         # Ensure risk_score is in valid range
         if not 0.0 <= self.risk_score <= 1.0:
             raise ValueError(
@@ -153,7 +153,7 @@ class SecurityPipeline:
             log_security_event(result.violations)
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize an empty security pipeline."""
         self.middlewares: List[SecurityMiddleware] = []
 
