@@ -359,6 +359,16 @@ If you encounter:
 **UPSS-VC-04:** Document all prompt changes with business justification  
 **UPSS-VC-05:** Implement automated testing for prompt functionality validation
 
+#### Runtime Security (RS)
+
+**UPSS-RS-01:** All prompts must be validated at runtime against a configurable set of forbidden patterns before being executed by any LLM  
+**UPSS-RS-02:** Implement input sanitization to detect and block prompt injection attempts  
+**UPSS-RS-03:** Enforce maximum prompt length limits to prevent resource exhaustion attacks  
+**UPSS-RS-04:** Validate prompt encoding and character sets to prevent bypass techniques  
+**UPSS-RS-05:** Implement rate limiting for prompt execution to prevent abuse
+
+**Implementation Note:** The v1.1.0 middleware architecture provides `BasicSanitizer`, `InputValidator`, and other primitives that implement these runtime security controls. See [MIDDLEWARE.md](implementations/python/MIDDLEWARE.md) for details.
+
 ### Recommended Controls
 
 #### Advanced Threat Protection (ATP)
