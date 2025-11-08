@@ -1,11 +1,6 @@
 name: Update Zenodo Metadata
 
 on:
-  push:
-    tags:
-      - 'v*'              # Only standard releases (v1.0.0, v1.1.0, etc.)
-      - '!v*-*'           # Exclude pre-releases like v1.0.0-beta
-      - '!python-v*'      # Exclude Python library tags
   release:
     types: [published]
 
