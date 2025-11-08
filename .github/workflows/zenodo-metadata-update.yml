@@ -95,7 +95,7 @@ jobs:
           mv CHANGELOG.md.tmp CHANGELOG.md
           rm -f changelog_entry.tmp
           
-      - name: Commit and push version updates
+      - name: Commit version updates
         run: |
           VERSION="${{ steps.release_info.outputs.version }}"
           
@@ -108,11 +108,25 @@ jobs:
           git add CITATION.cff
           git add CHANGELOG.md
           
-          # Commit changes
-          git commit -m "chore(release): update version to ${VERSION} [skip ci]"
-          
-          # Push to main branch
-          git push origin HEAD:main
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "::notice::No version changes to commit"
+          else
+            git commit -m "chore(release): update version to ${VERSION} [skip ci]"
+            
+            # Create a release branch and push to it
+            RELEASE_BRANCH="release/zenodo-v${VERSION}"
+            git checkout -b "${RELEASE_BRANCH}"
+            
+            if git push origin "${RELEASE_BRANCH}"; then
+              echo "✅ Created release branch: ${RELEASE_BRANCH}"
+              echo "::warning::Please create a pull request to merge ${RELEASE_BRANCH} into main"
+              echo "::warning::The workflow will continue assuming version files will be merged"
+            else
+              echo "::error::Failed to create release branch"
+              exit 1
+            fi
+          fi
           
       - name: Prepare Zenodo metadata
         id: zenodo_metadata

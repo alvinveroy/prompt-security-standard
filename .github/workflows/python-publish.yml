@@ -142,13 +142,17 @@ jobs:
           else
             git commit -m "chore(python): bump version to ${VERSION} [skip ci]"
             
-            # Try to push, but handle branch protection gracefully
-            if git push origin HEAD:main 2>&1 | grep -q "protected branch hook\|branch protection rule"; then
-              echo "::warning::Branch protection detected - unable to push version updates automatically"
-              echo "::warning::Please manually create a pull request with the committed changes"
-              echo "::warning::The workflow will continue assuming version files are already correct"
+            # Create a release branch and push to it
+            RELEASE_BRANCH="release/python-v${VERSION}"
+            git checkout -b "${RELEASE_BRANCH}"
+            
+            if git push origin "${RELEASE_BRANCH}"; then
+              echo "✅ Created release branch: ${RELEASE_BRANCH}"
+              echo "::warning::Please create a pull request to merge ${RELEASE_BRANCH} into main"
+              echo "::warning::The workflow will continue assuming version files will be merged"
             else
-              echo "✅ Committed and pushed version updates"
+              echo "::error::Failed to create release branch"
+              exit 1
             fi
           fi
 
