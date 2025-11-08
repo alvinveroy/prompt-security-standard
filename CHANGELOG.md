@@ -54,11 +54,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Release Notes
 ## What's Changed
-* feat(ci): auto-update version in README, CITATION, and CHANGELOG on release by @alvinveroy in https://github.com/alvinveroy/prompt-security-standard/pull/17
+* feat(ci): auto-update version in README, CITATION, and CHANGELOG on release by @alvinveroy in https://github.com/upss-standard/universal-prompt-security-standard/pull/17
 
 
-**Full Changelog**: https://github.com/alvinveroy/prompt-security-standard/compare/v1.0.0...v1.0.1
+**Full Changelog**: https://github.com/upss-standard/universal-prompt-security-standard/compare/v1.0.0...v1.0.1
 ### Added
 - Initial draft of the Universal Prompt Security Standard (UPSS)
 
-[1.0.1]: https://github.com/alvinveroy/prompt-security-standard/releases/tag/v1.0.1
+[1.0.1]: https://github.com/upss-standard/universal-prompt-security-standard/releases/tag/v1.0.1

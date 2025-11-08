@@ -10,8 +10,8 @@ authors:
     email: alvin@alvin.tech
     affiliation: Independent Researcher
     orcid: https://orcid.org/0009-0002-9085-7536
-repository-code: "https://github.com/alvinveroy/prompt-security-standard"
-url: "https://github.com/alvinveroy/prompt-security-standard"
+repository-code: "https://github.com/upss-standard/universal-prompt-security-standard"
+url: "https://github.com/upss-standard/universal-prompt-security-standard"
 keywords:
   - AI security
   - prompt injection
@@ -39,7 +39,7 @@ preferred-citation:
       affiliation: Independent Researcher
       orcid: https://orcid.org/0009-0002-9085-7536
   year: 2025
-  url: "https://github.com/alvinveroy/prompt-security-standard"
+  url: "https://github.com/upss-standard/universal-prompt-security-standard"
   identifiers:
     - type: doi
       value: 10.5281/zenodo.17472647

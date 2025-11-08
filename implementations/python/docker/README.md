@@ -496,8 +496,8 @@ docker-compose up -d
 ## Support
 
 For issues or questions:
-- GitHub Issues: https://github.com/alvinveroy/prompt-security-standard/issues
-- Documentation: https://github.com/alvinveroy/prompt-security-standard
+- GitHub Issues: https://github.com/upss-standard/universal-prompt-security-standard/issues
+- Documentation: https://github.com/upss-standard/universal-prompt-security-standard
 - Security: See SECURITY.md
 
 ## License

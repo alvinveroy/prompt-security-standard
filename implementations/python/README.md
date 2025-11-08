@@ -229,8 +229,8 @@ For security vulnerabilities, see [SECURITY.md](../../SECURITY.md).
 
 ## Support
 
-- GitHub Issues: [Report issues](https://github.com/alvinveroy/prompt-security-standard/issues)
-- Documentation: [Full docs](https://github.com/alvinveroy/prompt-security-standard)
+- GitHub Issues: [Report issues](https://github.com/upss-standard/universal-prompt-security-standard/issues)
+- Documentation: [Full docs](https://github.com/upss-standard/universal-prompt-security-standard)
 
 ## Citation
 
@@ -239,6 +239,6 @@ For security vulnerabilities, see [SECURITY.md](../../SECURITY.md).
   title={UPSS Python Library},
   author={UPSS Contributors},
   year={2025},
-  url={https://github.com/alvinveroy/prompt-security-standard}
+  url={https://github.com/upss-standard/universal-prompt-security-standard}
 }
 ```

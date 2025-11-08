@@ -47,6 +47,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/alvinveroy/prompt-security-standard/compare/python-v2.0.0...HEAD
-[2.0.0]: https://github.com/alvinveroy/prompt-security-standard/releases/tag/python-v2.0.0
-[1.0.0]: https://github.com/alvinveroy/prompt-security-standard/releases/tag/python-v1.0.0
+[Unreleased]: https://github.com/upss-standard/universal-prompt-security-standard/compare/python-v2.0.0...HEAD
+[2.0.0]: https://github.com/upss-standard/universal-prompt-security-standard/releases/tag/python-v2.0.0
+[1.0.0]: https://github.com/upss-standard/universal-prompt-security-standard/releases/tag/python-v1.0.0

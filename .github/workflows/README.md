@@ -44,7 +44,7 @@ git tag -a v1.1.0 -m "Release v1.1.0"
 git push origin v1.1.0
 
 # Create a release on GitHub
-# Go to https://github.com/alvinveroy/prompt-security-standard/releases/new
+# Go to https://github.com/upss-standard/universal-prompt-security-standard/releases/new
 # Or use GitHub CLI:
 gh release create v1.1.0 --title "v1.1.0" --notes "Release notes here"
 ```
