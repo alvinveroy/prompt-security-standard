@@ -106,7 +106,7 @@ prompt security for AI systems.
   year = {2025},
   month = {11},
   version = {1.1.0},
-  doi = {10.5281/zenodo.17472647},
+  doi = {10.5281/zenodo.17472646},
   url = {https://github.com/upss-standard/universal-prompt-security-standard},
   howpublished = {\url{https://github.com/upss-standard/universal-prompt-security-standard}},
   note = {Open standard for securing LLM prompts in production systems}
@@ -133,7 +133,7 @@ prompt security for AI systems.
 #### Factual Accuracy
 - Correct author attribution (Alvin T. Veroy)
 - Correct ORCID (0009-0002-9085-7536)
-- Correct DOI (10.5281/zenodo.17472647)
+- Correct DOI (10.5281/zenodo.17472646)
 - Correct version (1.1.0)
 - Accurate project status (Draft Proposal)
 

@@ -26,7 +26,7 @@ keywords:
 license: MIT
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.17472647
+    value: 10.5281/zenodo.17472646
     description: "Zenodo DOI for UPSS"
 date-released: 2025-11-08
 preferred-citation:
@@ -42,7 +42,7 @@ preferred-citation:
   url: "https://github.com/upss-standard/universal-prompt-security-standard"
   identifiers:
     - type: doi
-      value: 10.5281/zenodo.17472647
+      value: 10.5281/zenodo.17472646
 references:
   - type: standard
     title: "OWASP Top 10 for Large Language Model Applications"

@@ -8,7 +8,7 @@
 **Status:** Draft Proposal  
 **Last Updated:** November 8, 2025
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17472647.svg)](https://doi.org/10.5281/zenodo.17472647)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17472646.svg)](https://doi.org/10.5281/zenodo.17472646)
 
 > A comprehensive framework for externalizing, securing, and managing LLM prompts and generative AI systems across any organization or project.
 
@@ -648,7 +648,7 @@ If you reference UPSS in academic work or publications, please cite:
 
 **APA Style:**
 ```
-Veroy, A. T. (2025). Universal Prompt Security Standard (UPSS): A Composable Security Middleware Framework for LLM Prompts (Version 1.1.0). https://doi.org/10.5281/zenodo.17472647
+Veroy, A. T. (2025). Universal Prompt Security Standard (UPSS): A Composable Security Middleware Framework for LLM Prompts (Version 1.1.0). https://doi.org/10.5281/zenodo.17472646
 ```
 
 **BibTeX:**
@@ -659,7 +659,7 @@ Veroy, A. T. (2025). Universal Prompt Security Standard (UPSS): A Composable Sec
   year = {2025},
   month = {11},
   version = {1.1.0},
-  doi = {10.5281/zenodo.17472647},
+  doi = {10.5281/zenodo.17472646},
   url = {https://github.com/upss-standard/universal-prompt-security-standard},
   howpublished = {\url{https://github.com/upss-standard/universal-prompt-security-standard}},
   note = {Open standard for securing LLM prompts in production systems}
@@ -668,7 +668,7 @@ Veroy, A. T. (2025). Universal Prompt Security Standard (UPSS): A Composable Sec
 
 **IEEE Style:**
 ```
-A. T. Veroy, "Universal Prompt Security Standard (UPSS): A Composable Security Middleware Framework for LLM Prompts," Version 1.1.0, Nov. 2025. [Online]. Available: https://doi.org/10.5281/zenodo.17472647
+A. T. Veroy, "Universal Prompt Security Standard (UPSS): A Composable Security Middleware Framework for LLM Prompts," Version 1.1.0, Nov. 2025. [Online]. Available: https://doi.org/10.5281/zenodo.17472646
 ```
 
 **Author ORCID:** [0009-0002-9085-7536](https://orcid.org/0009-0002-9085-7536)

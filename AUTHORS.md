@@ -9,7 +9,7 @@ This document recognizes all contributors to the Universal Prompt Security Stand
 - **Affiliation**: Independent Researcher
 - **LinkedIn**: [linkedin.com/in/alvinveroy](https://www.linkedin.com/in/alvinveroy/)
 - **Email**: alvin@alvin.tech
-- **ORCID**: [0009-0001-0637-1954](https://orcid.org/0009-0001-0637-1954)
+- **ORCID**: [0009-0002-9085-7536](https://orcid.org/0009-0002-9085-7536)
 - **Contributions**:
   - Conceived and designed the UPSS framework
   - Authored core documentation and specifications
@@ -77,8 +77,8 @@ If you use UPSS in your work, please cite:
   title={Universal Prompt Security Standard (UPSS)},
   author={Veroy, Alvin T.},
   year={2025},
-  version={1.0.0},
-  doi={10.5281/zenodo.17472647},
+  version={1.1.0},
+  doi={10.5281/zenodo.17472646},
   url={https://github.com/upss-standard/universal-prompt-security-standard},
   note={Draft Proposal}
 }
